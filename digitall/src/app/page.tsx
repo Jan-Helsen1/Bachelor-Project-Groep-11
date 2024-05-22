@@ -4,6 +4,14 @@ import styles from "./page.module.scss";
 
 export default function Home() {
 	const [url, setUrl] = useState<string>("");
+	
+	const options = {
+        log: {
+            debug: console.log,
+            error: console.error,
+            info: console.log,
+        },
+    };
 
 	const handleCheckAccessibility = async () => {
 		console.log("test")
