@@ -3,6 +3,9 @@
 
 $primary-color-background: #232425;
 $primary-color-text: #ffffff;
+$secondary-color-background: #2C3031;
+$secondary-color-text: #000;
+$tertiary-color-background: #3C3F41;
 
 // Fonts
 
@@ -37,6 +40,7 @@ $border-radius-large: 16px;
 $border-radius-extra-large: 24px;
 
 $border-dark: 2px solid $primary-color-background;
+$border-light: 2px solid $secondary-color-background;
 
 // Shadows
 

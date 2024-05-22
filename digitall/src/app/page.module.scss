@@ -6,11 +6,106 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
 
 	.header {
 		width: 40%;
+		// height: 10%;
 		text-align: center;
-		margin: $spacing-medium-large 0;
+		margin: $spacing-medium 0;
+		padding: $spacing-medium;
+		background-color: $secondary-color-background;
+		border-radius: $border-radius-medium-large;
+
+		.title {
+			margin: 0;
+		}
+
+		.language_selector {
+			position: absolute;
+			top: 0;
+			right: 0;
+			padding: $spacing-small;
+			margin: $spacing-medium;
+			background-color: $secondary-color-background;
+			border-radius: $border-radius-small;
+			width: 4%;
+			cursor: pointer;
+		}
+	}
+
+	.body {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		height: 90%;
+		margin: $spacing-medium 0 $spacing-extra-large 0;
+
+		.header_body {
+			width: 100%;
+			height: 5%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
+			.title {
+				margin: 0;
+			}
+		}
+
+		.container {
+			width: 100%;
+			height: 95%;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			gap: $spacing-large;
+
+			.input_container {
+				width: 20%;
+				display: flex;
+				flex-direction: column;
+				gap: $spacing-small;
+
+				.label {
+					font-size: $font-size-large;
+				}
+
+				.input {
+					color: $primary-color-text;
+					padding: $spacing-small;
+					border: $border-light;
+					border-radius: $border-radius-small;
+					background-color: $tertiary-color-background;
+					outline: none;
+				}
+			}
+
+			.button_container {
+				width: 20%;
+				display: flex;
+				justify-content: center;
+
+				.button {
+					padding: $spacing-small;
+					border: $border-light;
+					border-radius: $border-radius-small;
+					background-color: $tertiary-color-background;
+					color: $primary-color-text;
+					cursor: pointer;
+
+					&:hover {
+						background-color: $secondary-color-background;
+						border: $border-dark;
+					}
+
+					&:active {
+						background-color: $primary-color-background;
+						border: $border-dark;
+					}
+				}
+			}
+		}
 	}
 }
