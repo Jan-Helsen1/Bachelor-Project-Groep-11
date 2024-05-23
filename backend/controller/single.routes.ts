@@ -20,7 +20,7 @@ singleRouter.post("/", async (req: Request, res: Response) => {
         res.json({ results: results });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
-    }
+    };
 });
 
 export default singleRouter;
