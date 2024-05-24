@@ -42,24 +42,23 @@ const Form: React.FC<Props> = ({ url, multipleUrls, isMultiple,  setUrl, setMult
                         </button>
                     )}
                 </div>
-                <input 
-                    name="url" 
-                    value={url} 
-                    onChange={(event) => setUrl(event.target.value)} 
-                    className="input" 
-                    type="text" 
-                />
             </div>
             <div className="button-container">
-                <button 
-                    onClick={() => handleCheckAccessibility(false)} 
+                <button
+                    onClick={() => handleCheckAccessibility(true)}
                     className="button"
                 >
                         Check accessibility
                 </button>
-                <div className="selector">
-                    <input type="text" value={multiple} onChange={() => {}} />
-                    <div className="container">
+                <div className="selector-container">
+                    <input
+                        type="text"
+                        value={multiple}
+                        onChange={() => {}}
+                        className="input"
+                        name="selector multiple"
+                    />
+                    <div className="selector">
                         <button 
                             onClick={() => setMultiple("single")} 
                             className={`selector-button ${!isMultiple ? "active" : ""}`}

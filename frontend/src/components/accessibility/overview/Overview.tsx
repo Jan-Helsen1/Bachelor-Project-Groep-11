@@ -2,22 +2,30 @@ import { useState } from "react";
 import "./Overview.scss";
 import Form from "../form/Form";
 
-const AccessibilityOverview: React.FC = () => {
+type Props = {
+	setShowReport: (showReport: boolean) => void;
+	setReportData: (reportData: any) => void;
+};
+
+const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }: Props) => {
     const [url, setUrl] = useState<string>("");
     const [multipleUrls, setMultipleUrls] = useState<string[]>([]);
     const [isMultiple, setIsMultiple] = useState<boolean>(false);
 
-    const handleCheckAccessibility = async () => {
+    const handleCheckAccessibility = async (send: boolean) => {
 		try {
-			const response = await fetch("http://localhost:3000/single", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ url }),
-			});
-			const data = await response.json();
-			console.log(data);
+			if (send && !isMultiple) {
+				const response = await fetch("http://localhost:3000/single", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ url }),
+				});
+				const data = await response.json();
+				setReportData(data.results);
+				setShowReport(true);
+			};
 		} catch (error: any) {
 			console.error(error.message);
 		};
