@@ -1,0 +1,63 @@
+
+// Colors
+
+$primary-background-color: #ffffff;
+$primary-background-color-hover: #f1f1f1;
+$primary-background-color-active: #e1e1e1;
+$primary-color-text: #000000;
+$primary-color-yellow: #FFD404;
+$primary-color-yellow-hover: #FFC404;
+$primary-color-yellow-active: #FFB404;
+$primary-color-blue: #1E4899;
+$primary-color-blue-hover: #1d428b;
+$primary-color-blue-active: #153477;
+$secondary-color-text: #ffffff;
+
+// Font Family
+
+$font-family: "Open Sans", sans-serif;
+
+// Fonts
+
+$font-size-extra-small: 8px;
+$font-size-small: 12px;
+$font-size-medium: 16px;
+$font-size-large: 20px;
+$font-size-extra-large: 24px;
+$font-size-huge: 32px;
+
+// Spacing
+
+$spacing-extra-small: 4px;
+$spacing-small: 8px;
+$spacing-medium: 16px;
+$spacing-large: 24px;
+$spacing-extra-large: 32px;
+$spacing-huge: 48px;
+
+// Borders
+
+$border-dark: 2px solid #000000;
+$border-light: 2px solid #d1d1d1;
+
+// Border Radius
+
+$border-radius-extra-small: 2px;
+$border-radius-small: 4px;
+$border-radius-medium: 8px;
+$border-radius-medium-large: 12px;
+$border-radius-large: 16px;
+$border-radius-extra-large: 24px;
+
+// Shadows
+
+$shadow-small: 0px 0px 24px 4px rgba(0, 0, 0, 0.15);
+$shadow-medium: 0px 0px 36px 8px rgba(0, 0, 0, 0.15);
+$shadow-large: 0px 0px 48px 16px rgba(0, 0, 0, 0.15);
+
+// Z-Index
+
+$z-index-low: 1;
+$z-index-medium: 5;
+$z-index-high: 10;
+$z-index-highest: 100;

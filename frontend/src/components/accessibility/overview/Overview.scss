@@ -1,0 +1,69 @@
+@import "../../../variables.scss";
+
+.body {
+	width: 100%;
+	height: 94%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+
+	.form {
+		width: 40%;
+		display: flex;
+		flex-direction: column;
+		gap: $spacing-large;
+		padding: $spacing-medium;
+		background-color: $primary-background-color-hover;
+		border-radius: $border-radius-medium;
+		border: $border-light;
+
+		.title {
+			margin: 0;
+			text-align: center;
+		}
+
+		.input-container {
+			display: flex;
+			flex-direction: column;
+			gap: $spacing-small;
+
+			.input {
+				font-size: $font-size-medium;
+				padding: $spacing-small;
+				border: $border-light;
+				border-radius: $border-radius-small;
+				outline: none;
+
+				&:focus {
+					border: $border-dark;
+				};
+			};
+		};
+
+		.button-container {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+
+			.button {
+				// width: 20%;
+				cursor: pointer;
+				border: none;
+				outline: none;
+				background-color: $primary-color-blue;
+				border-radius: $border-radius-small;
+				color: $secondary-color-text;
+				padding: $spacing-small;
+
+				&:hover {
+					background-color: $primary-color-blue-hover;
+				}
+
+				&:active {
+					background-color: $primary-color-blue-active;
+				}
+			}
+		}
+	};
+};
