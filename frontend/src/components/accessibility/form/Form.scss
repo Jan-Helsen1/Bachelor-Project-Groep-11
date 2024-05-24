@@ -65,11 +65,11 @@
 
     .button-container {
         display: flex;
+        gap: $spacing-medium;
         align-items: center;
         justify-content: center;
 
         .button {
-            // width: 20%;
             cursor: pointer;
             border: none;
             outline: none;
@@ -88,7 +88,73 @@
         };
 
         .selector-container {
+            width: 129px;
+            position: relative;
+            padding: $spacing-small;
             display: flex;
-        }
+            align-items: center;
+            background-color: $primary-color-yellow;
+            border-radius: $border-radius-small;
+
+            &:hover {
+                background-color: $primary-color-yellow-hover;
+            };
+
+            &:focus-within {
+                background-color: $primary-color-yellow-active;
+            };
+
+            .input {
+                width: 100%;
+                border: none;
+                outline: none;
+                padding: 0;
+                text-align: center;
+                background-color: inherit;
+            };
+
+            .selector {
+                position: absolute;
+                top: 36px;
+                left: 0px;
+                display: none;
+                flex-direction: column;
+                border: $border-light;
+                border-radius: $border-radius-small;
+
+                &:hover {
+                    display: flex;
+                };
+
+                .selector-button {
+                    width: 141px;
+                    padding: $spacing-small;
+                    border: none;
+                    border-bottom: $border-light;
+                    background-color: $primary-color-yellow;
+
+                    &:hover {
+                        background-color: $primary-color-yellow-hover;
+                    };
+
+                    &:active, &.active {
+                        background-color: $primary-color-yellow-active;
+                    };
+
+                    &:first-child {
+                        border-radius: $border-radius-extra-small $border-radius-extra-small 0 0;
+                    }
+
+                    &:last-child {
+                        border-radius: 0 0 $border-radius-extra-small $border-radius-extra-small;
+                        border: none;
+                    }
+                };
+            };
+
+            .input:focus + .selector {
+                display: flex;
+            };
+        };
     };
 };

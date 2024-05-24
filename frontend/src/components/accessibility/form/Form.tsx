@@ -12,10 +12,10 @@ type Props = {
 };
 
 const Form: React.FC<Props> = ({ url, multipleUrls, isMultiple,  setUrl, setMultipleUrls, setIsMultiple, handleCheckAccessibility }: Props) => {
-    const [multiple, setMultiple] = useState<string>("single"); 
+    const [multiple, setMultiple] = useState<string>("Single"); 
 
     useEffect(() => {
-        setIsMultiple(multiple === "multiple");
+        setIsMultiple(multiple === "Multiple");
     }, [multiple]);
 
     return (
@@ -57,16 +57,17 @@ const Form: React.FC<Props> = ({ url, multipleUrls, isMultiple,  setUrl, setMult
                         onChange={() => {}}
                         className="input"
                         name="selector multiple"
+                        readOnly
                     />
                     <div className="selector">
                         <button 
-                            onClick={() => setMultiple("single")} 
+                            onClick={() => setMultiple("Single")} 
                             className={`selector-button ${!isMultiple ? "active" : ""}`}
                         >
                             Single
                         </button>
                         <button 
-                            onClick={() => setMultiple("multiple")} 
+                            onClick={() => setMultiple("Multiple")} 
                             className={`selector-button ${isMultiple ? "active" : ""}`}
                         >
                             Multiple
