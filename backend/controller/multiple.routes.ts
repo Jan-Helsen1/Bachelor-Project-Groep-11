@@ -19,7 +19,23 @@ multipleRouter.post("/", async (req: Request, res: Response) => {
             urls.map(async (url: string) => await pa11y(url, options))
         );
 
-        res.json({ results: results });
+        const returnValue = results.map((result: any) => {
+            const { documentTitle, issues, pageUrl } = result;
+
+            return {
+                documentTitle,
+                pageUrl,
+                issues: issues.map((issue: any) => ({
+                    code: issue.code,
+                    context: issue.context,
+                    message: issue.message,
+                    selector: issue.selector,
+                    type: issue.type,
+                })),
+            };
+        });
+
+        res.json({ results: returnValue });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
