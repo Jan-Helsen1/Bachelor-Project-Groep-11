@@ -15,9 +15,25 @@ singleRouter.post("/", async (req: Request, res: Response) => {
     try {
         const { url } = req.body;
 
-        const results = await pa11y(url, options)
+        const results = await pa11y(url, options);
 
-        res.json({ results: results });
+        const { documentTitle, issues, pageUrl } = results;
+
+        const returnValue = [
+            {
+                documentTitle,
+                pageUrl,
+                issues: issues.map((issue: any) => ({
+                    code: issue.code,
+                    context: issue.context,
+                    message: issue.message,
+                    selector: issue.selector,
+                    type: issue.type,
+                })),
+            },
+        ]
+
+        res.json({ results: returnValue });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     };

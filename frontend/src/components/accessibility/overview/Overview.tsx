@@ -25,7 +25,20 @@ const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }
 				const data = await response.json();
 				setReportData(data.results);
 				setShowReport(true);
-			};
+			}
+			else if (send) {
+				const response = await fetch("http://localhost:3000/multiple", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ urls: multipleUrls }),
+				});
+				const data = await response.json();
+				console.log(data);
+				setReportData(data.results);
+				setShowReport(true);
+			}
 		} catch (error: any) {
 			console.error(error.message);
 		};
