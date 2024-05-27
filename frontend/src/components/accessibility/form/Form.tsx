@@ -35,7 +35,7 @@ const Form: React.FC<Props> = ({ url, multipleUrls, isMultiple,  setUrl, setMult
                     />
                     {isMultiple && (
                         <button 
-                            onClick={() => setMultipleUrls([...multipleUrls, ""])} 
+                            onClick={() => setMultipleUrls([...multipleUrls, url])} 
                             className="button"
                         >
                             Add URL
@@ -43,6 +43,18 @@ const Form: React.FC<Props> = ({ url, multipleUrls, isMultiple,  setUrl, setMult
                     )}
                 </div>
             </div>
+            {isMultiple && multipleUrls.length > 0 &&  (
+                <div className="multiple-container">
+                    <div className="label">Chosen URL's</div>
+                    <div className="multiple-urls">
+                        {multipleUrls.map((url, index) => (
+                            <div key={index} className="url">
+                            { url }
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
             <div className="button-container">
                 <button
                     onClick={() => handleCheckAccessibility(true)}

@@ -63,6 +63,29 @@
         };
     };
 
+    .multiple-container {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-small;
+
+        .multiple-urls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5%;
+            align-items: center;
+            padding: $spacing-small;
+            padding-bottom: 0;
+            border: $border-light;
+            border-radius: $border-radius-small;
+            background-color: $primary-background-color;
+    
+            .url {
+                width: 45%;
+                padding-bottom: $spacing-small;
+            };
+        };
+    };
+
     .button-container {
         display: flex;
         gap: $spacing-medium;
