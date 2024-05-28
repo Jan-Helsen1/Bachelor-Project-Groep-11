@@ -1,3 +1,4 @@
+import Issue from "../Issue/Issue";
 import "./Overview.scss";
 
 type Props = {
@@ -6,13 +7,11 @@ type Props = {
 };
 
 const ReportOverview: React.FC<Props> = ({ reportData, setShowReport }: Props) => {
-    
-    console.log(reportData)
 
     return (
-        <div className="body">
+        <div className="report-body">
             <div className="body-header">
-                <h2>Report</h2>
+                <h2 className="title">Report</h2>
                 <button onClick={() => setShowReport(false)} className="return-button">
                     Go back
                 </button>
@@ -22,18 +21,13 @@ const ReportOverview: React.FC<Props> = ({ reportData, setShowReport }: Props) =
                     return (
                         <div className="page-container" key={index}>
                             <h3>{data.pageUrl}</h3>
-                            { data.issues.map((issue: any, index: number) => {
-                                return (
-                                    <div className="issue-container" key={index}>
-                                        <h4>{issue.message}</h4>
-                                        <p>{issue.type}</p>
-                                        <p>{issue.code}</p>
-                                        <samp>{issue.context}</samp>
-                                    </div>
-                                )
-                            })}
+                            <div className="issue-container">
+                                { data.issues.map((issue: any, index: number) => (
+                                    <Issue key={index} issue={issue} />
+                                ))}
+                            </div>
                         </div>
-                    )
+                    );
                 })}
             </div>
         </div>

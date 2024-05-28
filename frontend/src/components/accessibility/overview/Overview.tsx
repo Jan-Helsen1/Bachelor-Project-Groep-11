@@ -47,9 +47,6 @@ const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }
     return (
         <>
 			<div className="body">
-				<div>
-					The crawler will only do one page so you need to enter the different page url's
-				</div>
 				<Form
                     url={url}
                     multipleUrls={multipleUrls}

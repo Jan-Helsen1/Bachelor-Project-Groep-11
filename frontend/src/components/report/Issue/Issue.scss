@@ -1,0 +1,35 @@
+@import "../../../variables.scss";
+
+.issue {
+    border: $border-light;
+    border-radius: $border-radius-medium;
+    background-color: $primary-background-color-hover;
+    padding: $spacing-small;
+
+    .issue-header {
+        display: inline-flex;
+        justify-content: space-between;
+        width: 100%;
+        cursor: pointer;
+
+        .title {
+            margin: 0 0 $spacing-small 0;
+            width: 90%;
+        };
+    };
+
+    .details {
+        display: none;
+        flex-direction: column;
+        gap: $spacing-small;
+
+        &.show {
+            display: flex;
+        };
+
+        .code {
+            text-wrap: wrap;
+            word-wrap: break-word;
+        };
+    };
+};

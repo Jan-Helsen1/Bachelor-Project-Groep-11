@@ -20,10 +20,10 @@ const Form: React.FC<Props> = ({ url, multipleUrls, isMultiple,  setUrl, setMult
 
     return (
         <form onSubmit={(event) => event.preventDefault()} className="form">
-            <h2 className="title">Iets van tekst of uitleg</h2>
+            <h2 className="title">Test your accessibility</h2>
             <div className="input-container">
                 <label className="label" htmlFor="url">
-                    Your website URL
+                    URL
                 </label>
                 <div className="container">
                     <input 
