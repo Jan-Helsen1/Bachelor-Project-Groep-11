@@ -1,7 +1,6 @@
 import bodyParser from 'body-parser';
 import express from 'express';
-import singleRouter from './controller/single.routes';
-import multipleRouter from './controller/multiple.routes';
+import router from './controller/single.routes';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
@@ -24,11 +23,8 @@ const swaggerOpts = {
 };
 const swaggerSpec = swaggerJsdoc(swaggerOpts);
 
-// Router for single url search
-app.use("/single", singleRouter);
-
-// Router for multiple url search
-app.use("/multiple", multipleRouter);
+// Router for single and multiple url search
+app.use("/", router);
 
 // Swagger documentation
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
