@@ -91,12 +91,16 @@ const router = express.Router();
  */
 router.post("/single", async (req: Request, res: Response) => {
     try {
+        // Input data from the front-end
         const { url } = req.body;
 
+        // Run web crawler on the URL
         const results = await pa11y(url, options);
 
+        // Extract the document title, issues, and page URL
         const { documentTitle, issues, pageUrl } = results;
 
+        // Return the accessibility issues
         const returnValue = [
             {
                 documentTitle,
@@ -109,8 +113,9 @@ router.post("/single", async (req: Request, res: Response) => {
                     type: issue.type,
                 })),
             },
-        ]
+        ];
 
+        // Send the response
         res.json({ results: returnValue });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
@@ -145,12 +150,15 @@ router.post("/single", async (req: Request, res: Response) => {
  */
 router.post("/multiple", async (req: Request, res: Response) => {
     try {
+        // Input data from the front-end
         const { urls } = req.body;
 
+        // Run web crawler on the multiple URLs
         const results = await Promise.all(
             urls.map(async (url: string) => await pa11y(url, options))
         );
 
+        // Extract the document title, issues, and page URL
         const returnValue = results.map((result: any) => {
             const { documentTitle, issues, pageUrl } = result;
 
@@ -167,6 +175,7 @@ router.post("/multiple", async (req: Request, res: Response) => {
             };
         });
 
+        // Send the response
         res.json({ results: returnValue });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
