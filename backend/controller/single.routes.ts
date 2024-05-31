@@ -24,9 +24,9 @@
  *                              type: string
  *                          type:
  *                              type: string
- *              file:
- *                  type: string
- *                  format: binary
+ *      PdfFile:
+ *          type: string
+ *          format: binary
  *      ReturnObjects:
  *          type: array
  *          items:
@@ -174,14 +174,21 @@ router.post("/multiple", async (req: Request, res: Response) => {
 });
 
 router.post("/pdf", async (req: Request, res: Response) => {
+    // Input data from the front-end
+    const { reportData } = req.body;
+
+    // Create a new PDF document
     const doc = new jsPDF();
 
+    // Generate PDF path and save
     const pdfPath = path.join(__dirname, 'generated.pdf');
     doc.save(pdfPath);
 
+    // Set response headers
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', 'attachment; filename=generated.pdf');
 
+    // Send the PDF file
     res.download(pdfPath, 'generated.pdf', (err) => {
         if (err) {
             console.error(err);
