@@ -354,7 +354,6 @@
             "messageName": "Check that this element has an inherited background colour or image to complement the corresponding inline foreground colour.",
             "appliesTo": "Elements with a foreground color style or attribute, without a corresponding background color style or bgcolor attribute."
         },
-
         "Principle1.Guideline1_4.1_4_6.G17": {
             "messageName": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 7:1.",
             "appliesTo": "Text placed in front of a background image. Applies at Level AAA to general text."
@@ -508,8 +507,7 @@
         "Principle1.Guideline1_3.1_3_1.H73.3.Check": {
             "messageName": "If this table is a data table, check that the summary attribute describes the tables organization or explains how to use the table.",
             "appliesTo": "Table with specified summary attribute."
-        },
-        
+        },    
         "Principle1.Guideline1_3.1_3_1.H39.3.Check": {
             "messageName": "If this table is a data table, check that the caption element accurately describes this table.",
             "appliesTo": "Table with specified caption element."
