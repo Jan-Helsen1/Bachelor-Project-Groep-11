@@ -3,16 +3,23 @@ import "./Overview.scss";
 
 type Props = {
     reportData: any[];
+    fileUrl: string;
+    setReportData: (reportData: any) => void;
     setShowReport: (showReport: boolean) => void;
 };
 
-const ReportOverview: React.FC<Props> = ({ reportData, setShowReport }: Props) => {
+const ReportOverview: React.FC<Props> = ({ reportData, fileUrl, setReportData, setShowReport }: Props) => {
+
+    const handleGoBack = () => {
+        setShowReport(false);
+        setReportData([]);
+    };
 
     return (
         <div className="report-body">
             <div className="body-header">
                 <h2 className="title">Report</h2>
-                <button onClick={() => setShowReport(false)} className="return-button">
+                <button onClick={handleGoBack} className="return-button">
                     Go back
                 </button>
             </div>
@@ -29,6 +36,9 @@ const ReportOverview: React.FC<Props> = ({ reportData, setShowReport }: Props) =
                         </div>
                     );
                 })}
+                <div className="download-pdf">
+                    <a href={fileUrl}>download pdf</a>
+                </div>
             </div>
         </div>
     )
