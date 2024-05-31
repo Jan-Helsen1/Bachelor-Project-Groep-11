@@ -24,6 +24,9 @@
  *                              type: string
  *                          type:
  *                              type: string
+ *      PdfFile:
+ *          type: string
+ *          format: binary
  *      ReturnObjects:
  *          type: array
  *          items:
@@ -46,6 +49,9 @@
  */
 import express, { Request, Response } from 'express';
 import pa11y from 'pa11y';
+import jsPDF from 'jspdf';
+import path from 'path';
+import fs from 'fs';
 
 const options = {
     log: {
@@ -56,7 +62,6 @@ const options = {
 };
 
 const router = express.Router();
-
 
 /**
  * @swagger
@@ -167,5 +172,33 @@ router.post("/multiple", async (req: Request, res: Response) => {
         res.status(500).json({ message: error.message });
     }
 });
+
+router.post("/pdf", async (req: Request, res: Response) => {
+    // Input data from the front-end
+    const { reportData } = req.body;
+
+    // Create a new PDF document
+    const doc = new jsPDF();
+
+    // Generate PDF path and save
+    const pdfPath = path.join(__dirname, 'generated.pdf');
+    doc.save(pdfPath);
+
+    // Set response headers
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=generated.pdf');
+
+    // Send the PDF file
+    res.download(pdfPath, 'generated.pdf', (err) => {
+        if (err) {
+            console.error(err);
+            fs.unlinkSync(pdfPath);
+            res.status(500).json({ message: err.message });
+        } 
+        else {
+            fs.unlinkSync(pdfPath);
+        }
+    });
+})
 
 export default router;
