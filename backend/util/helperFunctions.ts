@@ -2,9 +2,13 @@ import messages from '../WCAG/messages';
 
 const formatIssues = (issues: any) => {
     return issues.map((issue: any) => {
+        // gets the principles object from the messages object
         const principles = messages[issue.type];
-        // console.log(principles);
+
+        // gets the index of the first dot in the issue code
         const firstDotIndex = issue.code.indexOf('.');
+
+        // removes the wcag number from the issue code
         const resultString = issue.code.substring(firstDotIndex + 1);
         
         // checks for principle if no found returns undefined

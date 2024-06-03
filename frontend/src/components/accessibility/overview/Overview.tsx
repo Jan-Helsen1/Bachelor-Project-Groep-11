@@ -23,7 +23,6 @@ const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }
 					body: JSON.stringify({ url }),
 				});
 				const data = await response.json();
-				console.log(data);
 				setReportData(data.results);
 				setShowReport(true);
 			}
@@ -36,7 +35,6 @@ const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }
 					body: JSON.stringify({ urls: multipleUrls }),
 				});
 				const data = await response.json();
-				console.log(data);
 				setReportData(data.results);
 				setShowReport(true);
 			}
