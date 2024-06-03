@@ -6,7 +6,6 @@
         "esModuleInterop": true
     },
     "include": [
-        "**/*",
-        "WCAG/principles.ts"
+        "**/*"
     ]
 }

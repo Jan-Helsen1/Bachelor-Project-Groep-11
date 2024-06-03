@@ -23,7 +23,9 @@ const Issue: React.FC<Props> = ({ issue }: Props) => {
                 </div>
             </div>
             <div className={`details ${showDetails && "show"}`}>
-                <div className="code">{issue.code}</div>
+                <div>{issue.wcag} {issue.code}</div>
+                <div className="code">{issue.explanation}</div>
+                <div>{issue.appliesTo}</div>
                 <samp>{issue.context}</samp>
             </div>
         </div>

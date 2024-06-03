@@ -46,14 +46,18 @@
  *          type: array
  *          items:
  *              type: string
+ *      PdfFile:
+ *          type: string
+ *          format: binary
  */
-import { makeReport } from '../Report/ReportFunctions';
+import { formatIssues } from '../util/helperFunctions';
 import express, { Request, Response } from 'express';
-import messages from '../WCAG/messages';
+import { makeReport } from '../util/ReportFunctions';
 import pa11y from 'pa11y';
 import path from 'path';
 import fs from 'fs';
 
+// Pa11y options
 const options = {
     log: {
         debug: console.log,
@@ -62,6 +66,7 @@ const options = {
     },
 };
 
+// Initialize the router
 const router = express.Router();
 
 /**
@@ -82,7 +87,7 @@ const router = express.Router();
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/ReturnObject'
+ *                          $ref: '#/components/schemas/ReturnObjects'
  *          500:
  *              description: Internal server error
  *              content:
@@ -102,35 +107,22 @@ router.post("/single", async (req: Request, res: Response) => {
         const { documentTitle, issues, pageUrl } = results;
 
         // if no principle found return standard message
-        const returnIssues = issues.map((issue: any) => {
-            const principles = messages[issue.type];
-            // console.log(principles);
-            const firstDotIndex = issue.code.indexOf('.');
-            const resultString = issue.code.substring(firstDotIndex + 1);
-            const result = principles[resultString];
-            console.log(resultString);
-            console.log(result);
-
-        });
+        const returnIssues = formatIssues(issues);
 
         // Return the accessibility issues
         const returnValue = [
             {
                 documentTitle,
                 pageUrl,
-                issues: issues.map((issue: any) => ({
-                    code: issue.code,
-                    context: issue.context,
-                    message: issue.message,
-                    selector: issue.selector,
-                    type: issue.type,
-                })),
+                issues: returnIssues,
             },
         ];
 
         // Send the response
         res.json({ results: returnValue });
-    } catch (error: any) {
+    } 
+    catch (error: any) {
+        // Send the error message
         res.status(500).json({ message: error.message });
     };
 });
@@ -175,26 +167,50 @@ router.post("/multiple", async (req: Request, res: Response) => {
         const returnValue = results.map((result: any) => {
             const { documentTitle, issues, pageUrl } = result;
 
+            const returnIssues = formatIssues(issues);
+
             return {
                 documentTitle,
                 pageUrl,
-                issues: issues.map((issue: any) => ({
-                    code: issue.code,
-                    context: issue.context,
-                    message: issue.message,
-                    selector: issue.selector,
-                    type: issue.type,
-                })),
+                issues: returnIssues,
             };
         });
 
         // Send the response
         res.json({ results: returnValue });
-    } catch (error: any) {
+    } 
+    catch (error: any) {
+        // Send the error message
         res.status(500).json({ message: error.message });
-    }
+    };
 });
 
+/**
+ * @swagger
+ * /pdf:
+ *  post:
+ *      summary: Get pdf report for the accessibility issues
+ *      tags: [Report]
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#/components/schemas/ReturnObjects'
+ *      responses:
+ *          200:
+ *              description: The accessibility issues for the URL
+ *              content:
+ *                  application/pdf:
+ *                      schema:
+ *                          $ref: '#/components/schemas/PdfFile'
+ *          500:
+ *              description: Internal server error
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/ErrorReturn'
+ */
 router.post("/pdf", async (req: Request, res: Response) => {
     // Input data from the front-end
     const { reportData } = req.body;
@@ -213,11 +229,17 @@ router.post("/pdf", async (req: Request, res: Response) => {
     // Send the PDF file
     res.download(pdfPath, 'generated.pdf', (err) => {
         if (err) {
+            // Log the error
             console.error(err);
+
+            // Delete the PDF file
             fs.unlinkSync(pdfPath);
+
+            // Send the error message
             res.status(500).json({ message: err.message });
         } 
         else {
+            // Delete the PDF file
             fs.unlinkSync(pdfPath);
         }
     });
