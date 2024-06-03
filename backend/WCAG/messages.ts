@@ -1,5 +1,5 @@
-{
-    "Error": {
+const messages = {
+    "error": {
         "Principle1.Guideline1_1.1_1_1.H30.2": {
             "messageName": "Img element is the only content of the link, but is missing alt text. The alt text should describe the purpose of the link.",
             "appliesTo": "Image elements with an absent or empty alt attribute, that is the only non-blank content of a link."
@@ -275,9 +275,7 @@
         "Principle4.Guideline4_1.4_1_2.H91.[NodeName].Value": {
             "messageName": "This [element type] does not have a value available to an accessibility API.",
             "appliesTo": "Form control which does not have a valid accessibility API 'value'."
-        }
-    },
-    "Warning": {
+        },
         "Principle1.Guideline1_1.1_1_1.H67.2": {
             "messageName": "Img element is marked so that it is ignored by Assistive Technology.",
             "appliesTo": "Image element (outside of a link) that is marked with an empty alt attribute, and its title attribute is empty or absent."
@@ -338,14 +336,6 @@
             "messageName": "This element contains a potentially faulty value in its autocomplete attribute.",
             "appliesTo": "Input, select, or textarea elements with an autocomplete attribute."
         },
-        "Principle1.Guideline1_4.1_4_3.G18": {
-            "messageName": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 4.5:1.",
-            "appliesTo": "Text placed in front of a background image. Applies at Level AA to general text."
-        },
-        "Principle1.Guideline1_4.1_4_3.G145": {
-            "messageName": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 3:1.",
-            "appliesTo": "Text placed in front of a background image. Applies at Level AA to text defined as 'large text'."
-        },
         "Principle1.Guideline1_4.1_4_3.F24.BGColour": {
             "messageName": "Check that this element has an inherited foreground colour to complement the corresponding inline background colour or image.",
             "appliesTo": "Elements with a background style or bgcolor attribute, without a corresponding foreground color style or attribute."
@@ -353,14 +343,6 @@
         "Principle1.Guideline1_4.1_4_3.F24.FGColour": {
             "messageName": "Check that this element has an inherited background colour or image to complement the corresponding inline foreground colour.",
             "appliesTo": "Elements with a foreground color style or attribute, without a corresponding background color style or bgcolor attribute."
-        },
-        "Principle1.Guideline1_4.1_4_6.G17": {
-            "messageName": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 7:1.",
-            "appliesTo": "Text placed in front of a background image. Applies at Level AAA to general text."
-        },
-        "Principle1.Guideline1_4.1_4_6.G18": {
-            "messageName": "This element's text is placed on a background image. Ensure the contrast ratio between the text and all covered parts of the image are at least 4.5:1.",
-            "appliesTo": "Text placed in front of a background image. Applies at Level AAA to text defined as 'large text'."
         },
         "Principle1.Guideline1_4.1_4_10_C32,C31,C33,C38,SCR34,G206.Fixed": {
             "messageName": "This element has \"position: fixed\". This may require scrolling in two dimensions, which is considered a failure of this Success Criterion.",
@@ -437,9 +419,7 @@
         "Principle4.Guideline4_1.4_1_2.H91.A.Placeholder": {
             "messageName": "Anchor element found with link content, but no href and/or ID attribute has been supplied.",
             "appliesTo": "Link with text, but no href or ID."
-        }
-    },
-    "Notice": {
+        },
         "Principle1.Guideline1_1.1_1_1.G94.Image": {
             "messageName": "Ensure that the img element's alt text serves the same purpose and presents the same information as the image.",
             "appliesTo": "Images with alt text, in general."
@@ -760,5 +740,7 @@
             "messageName": "Check that status messages can be programmatically determined through role or properties such that they can be presented to the user by assistive technologies without receiving focus.",
             "appliesTo": "Top element."
         }
-    }
-}
+    },
+};
+
+export default messages;

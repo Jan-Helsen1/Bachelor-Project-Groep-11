@@ -47,9 +47,10 @@
  *          items:
  *              type: string
  */
+import { makeReport } from '../Report/ReportFunctions';
 import express, { Request, Response } from 'express';
+import messages from '../WCAG/messages';
 import pa11y from 'pa11y';
-import jsPDF from 'jspdf';
 import path from 'path';
 import fs from 'fs';
 
@@ -99,6 +100,18 @@ router.post("/single", async (req: Request, res: Response) => {
 
         // Extract the document title, issues, and page URL
         const { documentTitle, issues, pageUrl } = results;
+
+        // if no principle found return standard message
+        const returnIssues = issues.map((issue: any) => {
+            const principles = messages[issue.type];
+            // console.log(principles);
+            const firstDotIndex = issue.code.indexOf('.');
+            const resultString = issue.code.substring(firstDotIndex + 1);
+            const result = principles[resultString];
+            console.log(resultString);
+            console.log(result);
+
+        });
 
         // Return the accessibility issues
         const returnValue = [
@@ -187,7 +200,7 @@ router.post("/pdf", async (req: Request, res: Response) => {
     const { reportData } = req.body;
 
     // Create a new PDF document
-    const doc = new jsPDF();
+    const doc = makeReport(reportData);
 
     // Generate PDF path and save
     const pdfPath = path.join(__dirname, 'generated.pdf');
