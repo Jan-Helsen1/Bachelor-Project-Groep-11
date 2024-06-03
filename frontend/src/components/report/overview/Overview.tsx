@@ -37,7 +37,7 @@ const ReportOverview: React.FC<Props> = ({ reportData, fileUrl, setReportData, s
                     );
                 })}
                 <div className="download-pdf">
-                    <a href={fileUrl}>download pdf</a>
+                    <a download="generated-report.pdf" href={fileUrl}>download pdf</a>
                 </div>
             </div>
         </div>

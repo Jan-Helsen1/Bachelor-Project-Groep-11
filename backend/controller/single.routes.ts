@@ -46,9 +46,6 @@
  *          type: array
  *          items:
  *              type: string
- *      PdfFile:
- *          type: string
- *          format: binary
  */
 import { formatIssues } from '../util/helperFunctions';
 import express, { Request, Response } from 'express';
