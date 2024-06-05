@@ -49,7 +49,7 @@
  */
 import { formatIssues } from '../util/helperFunctions';
 import express, { Request, Response } from 'express';
-import { makeReport } from '../util/ReportFunctions';
+import { makeReport } from '../util/reportFunctions';
 import pa11y from 'pa11y';
 import path from 'path';
 import fs from 'fs';

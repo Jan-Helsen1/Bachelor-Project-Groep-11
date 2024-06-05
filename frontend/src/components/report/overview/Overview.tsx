@@ -19,9 +19,12 @@ const ReportOverview: React.FC<Props> = ({ reportData, fileUrl, setReportData, s
         <div className="report-body">
             <div className="body-header">
                 <h2 className="title">Report</h2>
-                <button onClick={handleGoBack} className="return-button">
-                    Go back
-                </button>
+                <div className="button-container">
+                    <a className="report-button" download="generated-report.pdf" href={fileUrl}>download pdf</a>
+                    <button onClick={handleGoBack} className="return-button">
+                        Go back
+                    </button>
+                </div>
             </div>
             <div className="report">
                 {reportData.map((data: any, index: number) => {
@@ -36,9 +39,6 @@ const ReportOverview: React.FC<Props> = ({ reportData, fileUrl, setReportData, s
                         </div>
                     );
                 })}
-                <div className="download-pdf">
-                    <a download="generated-report.pdf" href={fileUrl}>download pdf</a>
-                </div>
             </div>
         </div>
     )

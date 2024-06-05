@@ -15,25 +15,41 @@
         height: 6vh;
         display: inline-flex;
         justify-content: space-between;
+        align-items: center;
 
         .title {
             margin: 0;
         };
 
-        .return-button {
-            cursor: pointer;
-            padding: $spacing-small;
-            border: none;
-            border-radius: $border-radius-medium;
-            background-color: $primary-color-blue;
-            color: $secondary-color-text;
+        .button-container {
+            display: inline-flex;
+            gap: $spacing-medium;
 
-            &:hover {
-                background-color: $primary-color-blue-hover;
-            };
+            .report-button {
+                text-decoration: none;
+                cursor: pointer;
+                padding: $spacing-small-medium;
+                border: none;
+                border-radius: $border-radius-medium;
+                background-color: $primary-color-yellow;
+                color: $primary-color-text;
+            }
 
-            &:active {
-                background-color: $primary-color-blue-active;
+            .return-button {
+                cursor: pointer;
+                padding: $spacing-small-medium;
+                border: none;
+                border-radius: $border-radius-medium;
+                background-color: $primary-color-blue;
+                color: $secondary-color-text;
+    
+                &:hover {
+                    background-color: $primary-color-blue-hover;
+                };
+    
+                &:active {
+                    background-color: $primary-color-blue-active;
+                };
             };
         };
     };
