@@ -120,7 +120,7 @@ const messages = {
             explanation: "If this table is a data table, and both a summary attribute and a caption element are present, the summary should not duplicate the caption.",
             appliesTo: "Table where the summary attribute and caption element match exactly (after trimming)."
         },
-        "Principle1.Guideline1_3.1_3_1.H71.3": {
+        "Principle1.Guideline1_3.1_3_1.H71": {
             explanation: "Fieldset does not contain a legend element. All fieldsets should contain a legend element that describes a description of the field group.",
             appliesTo: "Fieldset without legend element."
         },

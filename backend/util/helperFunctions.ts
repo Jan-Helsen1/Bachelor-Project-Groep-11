@@ -43,14 +43,29 @@ const formatIssues = (issues: any) => {
                 };
             }
             else {
-                return {
-                    context: issue.context,
-                    message: issue.message,
-                    explanation: "No explanation found",
-                    appliesTo: "No applies to found",
-                    type: issue.type,
-                    wcag: issue.code.substring(0, firstDotIndex),
-                    code: issue.code.substring(firstDotIndex + 1),
+                const resultString3 = resultString2.substring(0, resultString2.lastIndexOf('.'));
+                const result3 = principles[resultString3];
+                if (result3) {
+                    return {
+                        context: issue.context,
+                        message: issue.message,
+                        explanation: result3.explanation,
+                        appliesTo: result3.appliesTo,
+                        type: issue.type,
+                        wcag: issue.code.substring(0, firstDotIndex),
+                        code: issue.code.substring(firstDotIndex + 1),
+                    };
+                }
+                else {
+                    return {
+                        context: issue.context,
+                        message: issue.message,
+                        explanation: "No explanation found",
+                        appliesTo: "No applies to found",
+                        type: issue.type,
+                        wcag: issue.code.substring(0, firstDotIndex),
+                        code: issue.code.substring(firstDotIndex + 1),
+                    };
                 };
             };
         };
