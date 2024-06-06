@@ -1,4 +1,116 @@
 import messages from '../WCAG/messages';
+import questions from '../WCAG/questions';
+import pa11y from 'pa11y';
+import https from 'https';
+
+// Pa11y options
+const options = {
+    log: {
+        debug: console.log,
+        error: console.error,
+        info: console.log,
+    },
+};
+
+const runSingleUrlTest = async (url: string) => {
+    // Run web crawler on the URL
+    const results = await pa11y(url, options);
+
+    // Extract the document title, issues, and page URL
+    const { documentTitle, issues, pageUrl } = results;
+
+    // if no principle found return standard message
+    const returnIssues = formatIssues(issues);
+
+    // Run https check on the URL
+    const httpsOptions = {
+        hostname: "localhost:5173",
+        port: 443,
+        method: "GET",
+        checkServerIdentity: function(host, cert) {
+            console.log("certificate: ", cert);
+            return new Error("Not trusted")
+        },
+    };
+
+    const httpsResult = { 
+        question: questions.https.question, 
+        answer: "Yes", 
+        score: 0 
+    };
+
+    try {
+        console.log("test")
+        const request = https.request(url, httpsOptions, (res) => {
+
+        })
+    } catch (error) {
+        
+    }
+    
+
+    // Wcag result
+    const wcagResult = { 
+        question: questions.wcag.question,
+        answer: null,
+        explanation: null,
+        score: 0,
+        issues: returnIssues
+    };
+
+    // Wcag answer for question
+    // Score berekening nog toevoegen
+    if (returnIssues.length === 0) {
+        wcagResult.answer = questions.wcag.answers.answer5.answer;
+        wcagResult.explanation = questions.wcag.answers.answer5.explanation;
+    }
+    else {
+        const lowestWcagIssue = returnIssues.reduce((acc: any, issue: any) => {
+            if (parseInt(issue.wcag) < parseInt(acc.wcag)) {
+                return issue;
+            }
+            return acc;
+        });
+    
+        switch (lowestWcagIssue.wcag) {
+            case "WCAG2A":
+                wcagResult.answer = questions.wcag.answers.answer2.answer;
+                wcagResult.explanation = questions.wcag.answers.answer2.explanation;
+                break;
+            case "WCAG2AA":
+                wcagResult.answer = questions.wcag.answers.answer3.answer;
+                wcagResult.explanation = questions.wcag.answers.answer3.explanation;
+                break;
+            case "WCAG2AAA":
+                wcagResult.answer = questions.wcag.answers.answer4.answer;
+                wcagResult.explanation = questions.wcag.answers.answer4.explanation;
+                break;
+            default:
+                break;
+        };
+    };
+
+    return {
+        documentTitle,
+        pageUrl,
+        issues: returnIssues,
+        questionResults: [
+            wcagResult,
+            httpsResult,
+        ],
+    };
+};
+
+const runMultipleUrlTest = async (urls: string[]) => {
+    // Run web crawler on the multiple URLs
+    const results = await Promise.all(
+        urls.map(async (url: string) => {
+            return await runSingleUrlTest(url);
+        })
+    );
+
+    return results;
+};
 
 const formatIssues = (issues: any) => {
     return issues.map((issue: any) => {
@@ -73,5 +185,6 @@ const formatIssues = (issues: any) => {
 };
 
 export {
-    formatIssues,
+    runSingleUrlTest,
+    runMultipleUrlTest
 }

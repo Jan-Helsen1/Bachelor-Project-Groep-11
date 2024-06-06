@@ -47,21 +47,11 @@
  *          items:
  *              type: string
  */
-import { formatIssues } from '../util/helperFunctions';
+import { runMultipleUrlTest, runSingleUrlTest } from '../util/helperFunctions';
 import express, { Request, Response } from 'express';
 import { makeReport } from '../util/reportFunctions';
-import pa11y from 'pa11y';
 import path from 'path';
 import fs from 'fs';
-
-// Pa11y options
-const options = {
-    log: {
-        debug: console.log,
-        error: console.error,
-        info: console.log,
-    },
-};
 
 // Initialize the router
 const router = express.Router();
@@ -97,26 +87,11 @@ router.post("/single", async (req: Request, res: Response) => {
         // Input data from the front-end
         const { url } = req.body;
 
-        // Run web crawler on the URL
-        const results = await pa11y(url, options);
-
-        // Extract the document title, issues, and page URL
-        const { documentTitle, issues, pageUrl } = results;
-
-        // if no principle found return standard message
-        const returnIssues = formatIssues(issues);
-
-        // Return the accessibility issues
-        const returnValue = [
-            {
-                documentTitle,
-                pageUrl,
-                issues: returnIssues,
-            },
-        ];
+        // Run all tests on the URL
+        const returnValue = await runSingleUrlTest(url);
 
         // Send the response
-        res.json({ results: returnValue });
+        res.json({ results: [returnValue] });
     } 
     catch (error: any) {
         // Send the error message
@@ -156,25 +131,10 @@ router.post("/multiple", async (req: Request, res: Response) => {
         const { urls } = req.body;
 
         // Run web crawler on the multiple URLs
-        const results = await Promise.all(
-            urls.map(async (url: string) => await pa11y(url, options))
-        );
-
-        // Extract the document title, issues, and page URL
-        const returnValue = results.map((result: any) => {
-            const { documentTitle, issues, pageUrl } = result;
-
-            const returnIssues = formatIssues(issues);
-
-            return {
-                documentTitle,
-                pageUrl,
-                issues: returnIssues,
-            };
-        });
+        const results = await runMultipleUrlTest(urls);
 
         // Send the response
-        res.json({ results: returnValue });
+        res.json({ results });
     } 
     catch (error: any) {
         // Send the error message
