@@ -71,10 +71,10 @@ const runSingleUrlTest = async (url: string) => {
         documentTitle,
         pageUrl,
         issues: returnIssues,
-        questionResults: [
+        questionResults: {
             wcagResult,
             httpsResult,
-        ],
+        },
     };
 };
 

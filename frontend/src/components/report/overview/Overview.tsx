@@ -32,7 +32,7 @@ const ReportOverview: React.FC<Props> = ({ reportData, fileUrl, setReportData, s
                         <div className="page-container" key={index}>
                             <h3>{data.pageUrl}</h3>
                             <div className="issue-container">
-                                { data.issues.map((issue: any, index: number) => (
+                                { data.questionResults.wcagResult.issues.map((issue: any, index: number) => (
                                     <Issue key={index} issue={issue} />
                                 ))}
                             </div>
