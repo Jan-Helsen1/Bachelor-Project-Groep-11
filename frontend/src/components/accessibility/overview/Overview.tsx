@@ -24,6 +24,7 @@ const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }
 				});
 				const data = await response.json();
 				setReportData(data.results);
+				console.log(data.results);
 				setShowReport(true);
 			}
 			else if (send) {
@@ -36,6 +37,7 @@ const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }
 				});
 				const data = await response.json();
 				setReportData(data.results);
+				console.log(data.results);
 				setShowReport(true);
 			}
 		} catch (error: any) {

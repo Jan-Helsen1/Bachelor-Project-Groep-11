@@ -22,32 +22,8 @@ const runSingleUrlTest = async (url: string) => {
     // if no principle found return standard message
     const returnIssues = formatIssues(issues);
 
-    // Run https check on the URL
-    const httpsOptions = {
-        hostname: "localhost:5173",
-        port: 443,
-        method: "GET",
-        checkServerIdentity: function(host, cert) {
-            console.log("certificate: ", cert);
-            return new Error("Not trusted")
-        },
-    };
-
-    const httpsResult = { 
-        question: questions.https.question, 
-        answer: "Yes", 
-        score: 0 
-    };
-
-    try {
-        console.log("test")
-        const request = https.request(url, httpsOptions, (res) => {
-
-        })
-    } catch (error) {
-        
-    }
-    
+    // Run https test
+    const httpsResult = await runHttpsTest(url);
 
     // Wcag result
     const wcagResult = { 
@@ -181,6 +157,51 @@ const formatIssues = (issues: any) => {
                 };
             };
         };
+    });
+};
+
+const runHttpsTest = (url: string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+        const httpsResult = { 
+            question: questions.https.question,
+            answer: "test",
+            score: 0
+        };
+
+        const httpsOptions = {
+            hostname: new URL(url).hostname,
+            port: 443,
+            method: "GET",
+            checkServerIdentity: function(host, cert) {
+                if (!cert) {
+                    httpsResult.answer = questions.https.answers.answer1.answer;
+                    resolve(httpsResult); // Resolve the promise with httpsResult
+                    return new Error("Not trusted")
+                };
+                httpsResult.answer = questions.https.answers.answer5.answer;
+                resolve(httpsResult); // Resolve the promise with httpsResult
+                return undefined;
+            },
+        };
+
+        try {
+            const request = https.request(url, httpsOptions, (res) => {
+                if (res.statusCode === 200) {
+                    // Handle the response if needed
+                } else {
+                    // Handle other status codes if needed
+                }
+            });
+
+            request.on("error", (error) => {
+                reject(error); // Reject the promise with the error
+            });
+
+            request.end();
+
+        } catch (error) {
+            reject(error); // Reject the promise with the caught error
+        }
     });
 };
 
