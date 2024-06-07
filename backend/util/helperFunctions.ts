@@ -48,6 +48,7 @@ const runSingleUrlTest = async (url: string) => {
             return acc;
         });
     
+        // Switch case for setting the answer and explanation based on the lowest WCAG issue
         switch (lowestWcagIssue.wcag) {
             case "WCAG2A":
                 wcagResult.answer = questions.wcag.answers.answer2.answer;
@@ -161,13 +162,17 @@ const formatIssues = (issues: any) => {
 };
 
 const runHttpsTest = (url: string): Promise<any> => {
+    // Return a new promise
     return new Promise((resolve, reject) => {
+        // Create the httpsResult object
         const httpsResult = { 
             question: questions.https.question,
-            answer: "test",
+            answer: null,
+            explanation: null,
             score: 0
         };
 
+        // Create the httpsOptions object
         const httpsOptions = {
             hostname: new URL(url).hostname,
             port: 443,
@@ -175,15 +180,18 @@ const runHttpsTest = (url: string): Promise<any> => {
             checkServerIdentity: function(host, cert) {
                 if (!cert) {
                     httpsResult.answer = questions.https.answers.answer1.answer;
+                    httpsResult.explanation = questions.https.answers.answer1.explanation;
                     resolve(httpsResult); // Resolve the promise with httpsResult
                     return new Error("Not trusted")
                 };
                 httpsResult.answer = questions.https.answers.answer5.answer;
+                httpsResult.explanation = questions.https.answers.answer5.explanation;
                 resolve(httpsResult); // Resolve the promise with httpsResult
                 return undefined;
             },
         };
 
+        // Try to run the https request
         try {
             const request = https.request(url, httpsOptions, (res) => {
                 if (res.statusCode === 200) {
