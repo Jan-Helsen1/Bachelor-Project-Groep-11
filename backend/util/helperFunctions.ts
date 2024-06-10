@@ -2,7 +2,6 @@ import messages from '../WCAG/messages';
 import questions from '../WCAG/questions';
 import pa11y from 'pa11y';
 import https from 'https';
-import { hostname } from 'os';
 
 // Pa11y options
 const options = {
@@ -19,39 +18,70 @@ const runTests = async (urls: string[]) => {
     const sortedUrls = sortUrlsByHostname(urls);
 
     // Run tests for each hostname
-    const results = sortedUrls.map(async (sortedUrl) => {
-        return await runTestsForHostname(sortedUrl.hostname, sortedUrl.urls);
-    });
+    // Run tests for each hostname
+    const results = await Promise.all(
+        sortedUrls.map(async (sortedUrl) => {
+            return await runTestsForHostname(sortedUrl.hostname, sortedUrl.urls);
+        })
+    );
 
-    // Run pa11y on the URL
-    const pa11yResult = await pa11y(url, options);
+    return results;
+};
 
-    // Extract the document title, issues, and page URL
-    const { documentTitle, issues, pageUrl } = pa11yResult;
-
-    // if no principle found return standard message
-    const returnIssues = formatIssues(issues);
+const runTestsForHostname = async (hostname: string, urls: string[]) => {
+    // Run wcag test
+    const wcagResult = await runWcagTest(urls);
 
     // Run https test
-    const httpsResult = await runHttpsTest(url);
+    const httpsResult = await runHttpsTest(urls[0]);
 
+    // Return the results
+    return {
+        hostname: hostname,
+        urls,
+        questionResults: {
+            wcagResult,
+            httpsResult,
+        },
+    };
+};
+
+const runWcagTest = async (urls: string[]) => {
     // Wcag result
     const wcagResult = { 
         question: questions.wcag.question,
         answer: null,
         explanation: null,
         score: 0,
-        issues: returnIssues
+        hostIssues: []
     };
+
+    // Run pa11y on the URL's
+    const pa11yPromises = urls.map(async (url) => {
+        const pa11yResult = await pa11y(url, options);
+
+        // Extract the document title, issues, and page URL
+        const { documentTitle, issues } = pa11yResult;
+
+        // Format the issues
+        const formattedIssues = formatIssues(issues);
+
+        // Add the issues to the wcagResult
+        wcagResult.hostIssues.push({ documentTitle , issues: formattedIssues });
+    });
+
+    // Wait for all pa11y promises to resolve
+    await Promise.all(pa11yPromises);
 
     // Wcag answer for question
     // Score berekening nog toevoegen
-    if (returnIssues.length === 0) {
+    const allIssues = wcagResult.hostIssues.flatMap((hostIssue: any) => hostIssue.issues);
+    if (allIssues.length === 0) {
         wcagResult.answer = questions.wcag.answers.answer5.answer;
         wcagResult.explanation = questions.wcag.answers.answer5.explanation;
     }
     else {
-        const lowestWcagIssue = returnIssues.reduce((acc: any, issue: any) => {
+        const lowestWcagIssue = allIssues.reduce((acc: any, issue: any) => {
             if (parseInt(issue.wcag) < parseInt(acc.wcag)) {
                 return issue;
             }
@@ -73,34 +103,12 @@ const runTests = async (urls: string[]) => {
                 wcagResult.explanation = questions.wcag.answers.answer4.explanation;
                 break;
             default:
+
                 break;
         };
     };
 
-    return results;
-};
-
-const runTestsForHostname = async (hostname: string, urls: string[]) => {
-    // Run tests for each URL
-    const wcagResult = await Promise.all(urls.map(async (url) => {
-
-    }));
-
-    // Run https test
-    const httpsResult = await runHttpsTest(urls[0]);
-
-    return {
-        hostname: hostname,
-        urls,
-        questionResults: {
-            wcagResult,
-            httpsResult,
-        },
-    };
-};
-
-const runWcagTest = (url: string): Promise<any> => {
-
+    return wcagResult;
 };
 
 const runHttpsTest = (url: string): Promise<any> => {
@@ -174,7 +182,7 @@ const sortUrlsByHostname = (urls: string[]) => {
         }
 
         // Add the URL to the hostname
-        sortedUrls.set(hostname, [url]);
+        sortedUrls.get(hostname).push(url);
     });
 
     // Return the sorted URLs as an array of objects

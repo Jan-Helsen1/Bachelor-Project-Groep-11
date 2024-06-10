@@ -13,7 +13,7 @@
  *                  items:
  *                      type: string
  *                      example: digitall.be/situation-belgium
- *              questionResult:
+ *              questionResults:
  *                  type: object
  *                  properties:
  *                      wcagResult:
@@ -97,21 +97,15 @@
  *          properties:
  *              message:
  *                  type: string
- *      SingleURL:
- *          type: object
- *          properties:
- *              url:
- *                  type: string
- *                  example: https://www.example.be
  *      MultipleURL:
  *          type: array
  *          items:
  *              type: string
  *              example: https://www.example1.be
  */
-import { runMultipleUrlTest, runSingleUrlTest } from '../util/helperFunctions';
 import express, { Request, Response } from 'express';
 import { makeReport } from '../util/reportFunctions';
+import { runTests } from '../util/helperFunctions';
 import path from 'path';
 import fs from 'fs';
 
@@ -153,7 +147,7 @@ router.post("/test", async (req: Request, res: Response) => {
         const returnValue = await runTests(urls);
 
         // Send the response
-        res.json({ results: [returnValue] });
+        res.json({ results: returnValue });
     } 
     catch (error: any) {
         // Send the error message
@@ -189,7 +183,7 @@ router.post("/test", async (req: Request, res: Response) => {
  */
 router.post("/pdf", async (req: Request, res: Response) => {
     // Input data from the front-end
-    const { reportData } = req.body;
+    const { reportData } =  req.body;
 
     // Create a new PDF document
     const doc = makeReport(reportData);

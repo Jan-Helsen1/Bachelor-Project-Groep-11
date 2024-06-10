@@ -30,7 +30,7 @@ const WcagResult: React.FC<Props> = ({ results }: Props) => {
                 <b>Score: </b>{results.score}
             </div>
             { showIssues && (
-                <IssuesPopup isOpen={showIssues} issues={results.issues} setIsOpen={setShowIssues} />
+                <IssuesPopup isOpen={showIssues} hostIssues={results.hostIssues} setIsOpen={setShowIssues} />
             )}
         </div>
     );

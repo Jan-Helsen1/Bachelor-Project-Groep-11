@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 
-const makeReport = (reportData: any): jsPDF => {
+const makeReport = (reportData: any[]): jsPDF => {
     // Initialize yPosition
     let yPosition = 20;
     
@@ -10,33 +10,45 @@ const makeReport = (reportData: any): jsPDF => {
     // Set title
     yPosition = addTitle(doc, 'Accessibility Report', yPosition);
 
-    // Loop over different pages
-    reportData.forEach((data: any, index: number) => {
+    // Loop through the report data
+    let i = 0;
+    while ( i < reportData.length ) {
+        // Add hostname
+        yPosition = addSubTitle(doc, reportData[i].hostname, yPosition);
+
+        // Add WCAG result
+        yPosition = addIssueTitle(doc, 'WCAG result', yPosition);
+        yPosition = addParagraph(doc, reportData[i].questionResults.wcagResult.answer, yPosition);
+
+        // Add HTTPS result
+        yPosition = addIssueTitle(doc, 'HTTPS result', yPosition);
+        yPosition = addParagraph(doc, reportData[i].questionResults.httpsResult.answer, yPosition);
+
         // Add page break
-        if (index > 0) yPosition = addPageBreak(doc, yPosition);
+        yPosition = addPageBreak(doc, yPosition);
 
-        // Set page URL
-        yPosition = addSubTitle(doc, `Summary: ${data.documentTitle}`, yPosition);
-
-        // Add issues
-        data.issues.forEach((issue: any, index: number) => {
-            // Set issue title
-            yPosition = addIssueTitle(doc, `${issue.type}: ${issue.message}`, yPosition);
-
-            // Set paragraphs per issue
-            yPosition = addParagraph(doc, `${issue.wcag} ${issue.code}`, yPosition);
-            yPosition = addParagraph(doc, issue.explanation, yPosition);
-            yPosition = addParagraph(doc, issue.appliesTo, yPosition);
-            yPosition = addParagraph(doc, issue.context, yPosition);
-            yPosition += 5;
-        });
-
-        // Add spacing between pages
-        yPosition += 10;
-    });
+        // Increment i
+        i++;
+    };
 
     // Return the PDF document
-    return doc;
+    return doc; 
+};
+
+const addWcagResultsToReport = (doc: jsPDF, wcagResult: any, yPosition: number): number => {
+    // Add WCAG result nog verder schrijven
+    yPosition = addIssueTitle(doc, 'WCAG result', yPosition);
+    yPosition = addParagraph(doc, wcagResult.answer, yPosition);
+
+    return yPosition;
+};
+
+const addHttpsResultsToReport = (doc: jsPDF, httpsResult: any, yPosition: number): number => {
+    // Add HTTPS result nog verder schrijven
+    yPosition = addIssueTitle(doc, 'HTTPS result', yPosition);
+    yPosition = addParagraph(doc, httpsResult.answer, yPosition);
+
+    return yPosition;
 };
 
 const addTitle = (doc: jsPDF, title: string, yPosition: number): number => {

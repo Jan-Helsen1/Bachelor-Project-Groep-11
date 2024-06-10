@@ -5,11 +5,11 @@ import Issue from "../Issue/Issue";
 
 type Props = {
     isOpen: boolean;
-    issues: any;
+    hostIssues: any;
     setIsOpen: (isOpen: boolean) => void;
 };
 
-const IssuesPopup: React.FC<Props> = ({ isOpen, issues, setIsOpen }: Props) => {
+const IssuesPopup: React.FC<Props> = ({ isOpen, hostIssues, setIsOpen }: Props) => {
     return (
         <Modal isOpen={isOpen}>
             <div className="issues-popup">
@@ -18,8 +18,13 @@ const IssuesPopup: React.FC<Props> = ({ isOpen, issues, setIsOpen }: Props) => {
                     <button onClick={() => setIsOpen(false)} className="close-button">Close</button>
                 </div>
                 <div className="issues-container">
-                    {issues.map((issue: any, index: number) => (
-                        <Issue key={index} issue={issue} />
+                    {hostIssues.map((hostIssue: any, index: number) => (
+                        <div key={index}>
+                            <h3 className="page-title">{hostIssue.documentTitle}</h3>
+                            {hostIssue.issues.map((issue: any, index: number) => (
+                                <Issue key={index} issue={issue} />
+                            ))}
+                        </div>
                     ))}
                 </div>
             </div>

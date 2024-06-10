@@ -13,7 +13,7 @@ const ReportOverview: React.FC<Props> = ({ reportData, fileUrl, setReportData, s
 
     const handleGoBack = () => {
         setShowReport(false);
-        setReportData([]);
+        setReportData(null);
     };
 
     return (
@@ -31,7 +31,7 @@ const ReportOverview: React.FC<Props> = ({ reportData, fileUrl, setReportData, s
                 {reportData.map((data: any, index: number) => {
                     return (
                         <div className="page-container" key={index}>
-                            <h3 className="page-title">{data.pageUrl}</h3>
+                            <h3 className="page-title">{data.hostname}</h3>
                             <div className="test-container">
                                 <WcagResult results={data.questionResults.wcagResult} />
                                 <HttpsResult results={data.questionResults.httpsResult} />

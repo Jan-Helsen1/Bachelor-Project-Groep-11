@@ -11,13 +11,15 @@ function App() {
 
 	useEffect(() => {
 		if (reportData) {
+			console.log("useState: ", reportData);
 			handleGetPdf();
 		}
 	}, [reportData]);
 
 	const handleGetPdf = async () => {
 		try {
-			const response = await fetch("http://localhost:3000/pdf", {
+			console.log(reportData);
+			const response = await fetch("http://localhost:3000/api/pdf", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

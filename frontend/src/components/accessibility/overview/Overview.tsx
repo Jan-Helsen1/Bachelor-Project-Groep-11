@@ -15,19 +15,20 @@ const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }
     const handleCheckAccessibility = async (send: boolean) => {
 		try {
 			if (send && !isMultiple) {
-				const response = await fetch("http://localhost:3000/single", {
+				const response = await fetch("http://localhost:3000/api/test", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({ url }),
+					body: JSON.stringify({ urls: [url] }),
 				});
 				const data = await response.json();
+				console.log(data.results);
 				setReportData(data.results);
 				setShowReport(true);
 			}
 			else if (send) {
-				const response = await fetch("http://localhost:3000/multiple", {
+				const response = await fetch("http://localhost:3000/api/test", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
