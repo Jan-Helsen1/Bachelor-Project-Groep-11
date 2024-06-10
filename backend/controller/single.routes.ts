@@ -87,7 +87,7 @@ router.post("/single", async (req: Request, res: Response) => {
         // Input data from the front-end
         const { url } = req.body;
 
-        // Run all tests on the URL
+        // Get the wcag and https results
         const returnValue = await runSingleUrlTest(url);
 
         // Send the response

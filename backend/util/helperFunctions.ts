@@ -13,11 +13,11 @@ const options = {
 };
 
 const runSingleUrlTest = async (url: string) => {
-    // Run web crawler on the URL
-    const results = await pa11y(url, options);
+    // Run pa11y on the URL
+    const pa11yResult = await pa11y(url, options);
 
     // Extract the document title, issues, and page URL
-    const { documentTitle, issues, pageUrl } = results;
+    const { documentTitle, issues, pageUrl } = pa11yResult;
 
     // if no principle found return standard message
     const returnIssues = formatIssues(issues);
@@ -162,6 +162,7 @@ const formatIssues = (issues: any) => {
 };
 
 const runHttpsTest = (url: string): Promise<any> => {
+    console.log("Running HTTPS test on: " + url);
     // Return a new promise
     return new Promise((resolve, reject) => {
         // Create the httpsResult object
@@ -179,13 +180,15 @@ const runHttpsTest = (url: string): Promise<any> => {
             method: "GET",
             checkServerIdentity: function(host, cert) {
                 if (!cert) {
+                    console.log("No certificate found");
                     httpsResult.answer = questions.https.answers.answer1.answer;
                     httpsResult.explanation = questions.https.answers.answer1.explanation;
-                    resolve(httpsResult); // Resolve the promise with httpsResult
-                    return new Error("Not trusted")
-                };
-                httpsResult.answer = questions.https.answers.answer5.answer;
-                httpsResult.explanation = questions.https.answers.answer5.explanation;
+                }
+                else {
+                    console.log("Certificate found");
+                    httpsResult.answer = questions.https.answers.answer5.answer;
+                    httpsResult.explanation = questions.https.answers.answer5.explanation;
+                }
                 resolve(httpsResult); // Resolve the promise with httpsResult
                 return undefined;
             },
@@ -196,18 +199,24 @@ const runHttpsTest = (url: string): Promise<any> => {
             const request = https.request(url, httpsOptions, (res) => {
                 if (res.statusCode === 200) {
                     // Handle the response if needed
+                    console.log("HTTPS test successful");
+                    resolve(httpsResult); // Resolve the promise with httpsResult
                 } else {
                     // Handle other status codes if needed
+                    console.log("HTTPS test unsuccessful");
+                    reject("HTTPS test unsuccessful"); // Reject the promise with an error
                 }
             });
 
             request.on("error", (error) => {
+                console.error(error); // Log the error
                 reject(error); // Reject the promise with the error
             });
 
             request.end();
 
         } catch (error) {
+            console.error(error); // Log the caught error
             reject(error); // Reject the promise with the caught error
         }
     });
