@@ -12,6 +12,9 @@ const makeReport = (reportData: any): jsPDF => {
 
     // Loop over different pages
     reportData.forEach((data: any, index: number) => {
+        // Add page break
+        if (index > 0) yPosition = addPageBreak(doc, yPosition);
+
         // Set page URL
         yPosition = addSubTitle(doc, `Summary: ${data.documentTitle}`, yPosition);
 
@@ -104,6 +107,12 @@ const checkPageBreak = (doc: jsPDF, yPosition: number): number => {
         return 30;
     }
     return yPosition;
+};
+
+const addPageBreak = (doc: jsPDF, yPosition: number): number => {
+    // Add a page break
+    doc.addPage();
+    return 30;
 };
 
 // Export the functions

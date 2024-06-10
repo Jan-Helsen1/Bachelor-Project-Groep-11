@@ -2,6 +2,7 @@ import messages from '../WCAG/messages';
 import questions from '../WCAG/questions';
 import pa11y from 'pa11y';
 import https from 'https';
+import { hostname } from 'os';
 
 // Pa11y options
 const options = {
@@ -12,7 +13,16 @@ const options = {
     },
 };
 
-const runSingleUrlTest = async (url: string) => {
+const runTests = async (urls: string[]) => {
+    // Sort urls per hostname
+    // This is done to prevent multiple requests to the same hostname
+    const sortedUrls = sortUrlsByHostname(urls);
+
+    // Run tests for each hostname
+    const results = sortedUrls.map(async (sortedUrl) => {
+        return await runTestsForHostname(sortedUrl.hostname, sortedUrl.urls);
+    });
+
     // Run pa11y on the URL
     const pa11yResult = await pa11y(url, options);
 
@@ -67,10 +77,21 @@ const runSingleUrlTest = async (url: string) => {
         };
     };
 
+    return results;
+};
+
+const runTestsForHostname = async (hostname: string, urls: string[]) => {
+    // Run tests for each URL
+    const wcagResult = await Promise.all(urls.map(async (url) => {
+
+    }));
+
+    // Run https test
+    const httpsResult = await runHttpsTest(urls[0]);
+
     return {
-        documentTitle,
-        pageUrl,
-        issues: returnIssues,
+        hostname: hostname,
+        urls,
         questionResults: {
             wcagResult,
             httpsResult,
@@ -78,15 +99,91 @@ const runSingleUrlTest = async (url: string) => {
     };
 };
 
-const runMultipleUrlTest = async (urls: string[]) => {
-    // Run web crawler on the multiple URLs
-    const results = await Promise.all(
-        urls.map(async (url: string) => {
-            return await runSingleUrlTest(url);
-        })
-    );
+const runWcagTest = (url: string): Promise<any> => {
 
-    return results;
+};
+
+const runHttpsTest = (url: string): Promise<any> => {
+    // Return a new promise
+    return new Promise((resolve, reject) => {
+        // Create the httpsResult object
+        const httpsResult = { 
+            question: questions.https.question,
+            answer: null,
+            explanation: null,
+            score: 0
+        };
+
+        // Create the httpsOptions object
+        const httpsOptions = {
+            hostname: new URL(url).hostname,
+            port: 443,
+            method: "GET",
+            checkServerIdentity: function(host, cert) {
+                if (!cert) {
+                    httpsResult.answer = questions.https.answers.answer1.answer;
+                    httpsResult.explanation = questions.https.answers.answer1.explanation;
+                }
+                else {
+                    httpsResult.answer = questions.https.answers.answer5.answer;
+                    httpsResult.explanation = questions.https.answers.answer5.explanation;
+                }
+                resolve(httpsResult); // Resolve the promise with httpsResult
+                return undefined;
+            },
+        };
+
+        // Try to run the https request
+        try {
+            const request = https.request(url, httpsOptions, (res) => {
+                if (res.statusCode === 200) {
+                    // Handle the response if needed
+                    resolve(httpsResult); // Resolve the promise with httpsResult
+                } else {
+                    // Handle other status codes if needed
+                    reject("HTTPS test unsuccessful"); // Reject the promise with an error
+                }
+            });
+
+            request.on("error", (error) => {
+                console.error(error); // Log the error
+                reject(error); // Reject the promise with the error
+            });
+
+            request.end();
+
+        } catch (error) {
+            console.error(error); // Log the caught error
+            reject(error); // Reject the promise with the caught error
+        }
+    });
+};
+
+const sortUrlsByHostname = (urls: string[]) => {
+    // Create a new map to store the sorted URLs
+    const sortedUrls = new Map<string, string[]>();
+
+    // Loop over the URLs
+    urls.forEach((url) => {
+        // Get the hostname of the URL
+        const hostname = new URL(url).hostname;
+
+        // Check if the hostname is already in the map
+        if (!sortedUrls.has(hostname)) {
+            sortedUrls.set(hostname, []);
+        }
+
+        // Add the URL to the hostname
+        sortedUrls.set(hostname, [url]);
+    });
+
+    // Return the sorted URLs as an array of objects
+    return Array.from(sortedUrls, ([hostname, urls]) => {
+        return {
+            hostname: hostname,
+            urls: urls
+        };
+    });
 };
 
 const formatIssues = (issues: any) => {
@@ -161,68 +258,6 @@ const formatIssues = (issues: any) => {
     });
 };
 
-const runHttpsTest = (url: string): Promise<any> => {
-    console.log("Running HTTPS test on: " + url);
-    // Return a new promise
-    return new Promise((resolve, reject) => {
-        // Create the httpsResult object
-        const httpsResult = { 
-            question: questions.https.question,
-            answer: null,
-            explanation: null,
-            score: 0
-        };
-
-        // Create the httpsOptions object
-        const httpsOptions = {
-            hostname: new URL(url).hostname,
-            port: 443,
-            method: "GET",
-            checkServerIdentity: function(host, cert) {
-                if (!cert) {
-                    console.log("No certificate found");
-                    httpsResult.answer = questions.https.answers.answer1.answer;
-                    httpsResult.explanation = questions.https.answers.answer1.explanation;
-                }
-                else {
-                    console.log("Certificate found");
-                    httpsResult.answer = questions.https.answers.answer5.answer;
-                    httpsResult.explanation = questions.https.answers.answer5.explanation;
-                }
-                resolve(httpsResult); // Resolve the promise with httpsResult
-                return undefined;
-            },
-        };
-
-        // Try to run the https request
-        try {
-            const request = https.request(url, httpsOptions, (res) => {
-                if (res.statusCode === 200) {
-                    // Handle the response if needed
-                    console.log("HTTPS test successful");
-                    resolve(httpsResult); // Resolve the promise with httpsResult
-                } else {
-                    // Handle other status codes if needed
-                    console.log("HTTPS test unsuccessful");
-                    reject("HTTPS test unsuccessful"); // Reject the promise with an error
-                }
-            });
-
-            request.on("error", (error) => {
-                console.error(error); // Log the error
-                reject(error); // Reject the promise with the error
-            });
-
-            request.end();
-
-        } catch (error) {
-            console.error(error); // Log the caught error
-            reject(error); // Reject the promise with the caught error
-        }
-    });
-};
-
 export {
-    runSingleUrlTest,
-    runMultipleUrlTest
+    runTests
 }

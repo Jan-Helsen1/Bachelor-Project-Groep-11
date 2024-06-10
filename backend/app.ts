@@ -30,10 +30,10 @@ const swaggerOpts = {
 const swaggerSpec = swaggerJsdoc(swaggerOpts);
 
 // Router for single and multiple url search
-app.use("/", router);
+app.use("/api", router);
 
 // Swagger documentation
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use("/", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Start the server
 app.listen(port, () => {
