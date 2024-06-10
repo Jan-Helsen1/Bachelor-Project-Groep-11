@@ -66,10 +66,18 @@
             flex-direction: column;
             align-items: center;
 
-            .issue-container {
+            .page-title {
+                margin: 0;
+                padding: $spacing-medium 0;
+                font-size: $font-size-extra-large;
+                margin-bottom: $spacing-small-medium;
+            };
+
+            .test-container {
                 width: 100%;
                 display: flex;
-                flex-direction: column;
+                justify-content: space-between;
+                flex-wrap: wrap;
                 gap: $spacing-small 0;
             };
         };

@@ -1,0 +1,41 @@
+@import "../../../variables.scss";
+
+.wcag-container {
+    display: flex;
+    flex-direction: column;
+    width: 46%;
+    padding: $spacing-medium;
+    border-radius: $border-radius-medium;
+    border: $border-light;
+    background-color: $primary-color-grey;
+    gap: $spacing-medium;
+
+    .header-container {
+        display: inline-flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .test-title {
+            margin: 0;
+            padding: $spacing-small 0;
+            font-size: $font-size-large;
+        };
+
+        .issues-button {
+            cursor: pointer;
+            padding: $spacing-small;
+            border: none;
+            border-radius: $border-radius-medium;
+            background-color: $primary-color-blue;
+            color: $secondary-color-text;
+
+            &:hover {
+                background-color: $primary-color-blue-hover;
+            };
+
+            &:active {
+                background-color: $primary-color-blue-active;
+            };
+        };
+    };
+};

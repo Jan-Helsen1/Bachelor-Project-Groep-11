@@ -1,4 +1,5 @@
-import Issue from "../Issue/Issue";
+import HttpsResult from "../HttpsResult/HttpsResult";
+import WcagResult from "../WcagResult/WcagResult";
 import "./Overview.scss";
 
 type Props = {
@@ -30,11 +31,10 @@ const ReportOverview: React.FC<Props> = ({ reportData, fileUrl, setReportData, s
                 {reportData.map((data: any, index: number) => {
                     return (
                         <div className="page-container" key={index}>
-                            <h3>{data.pageUrl}</h3>
-                            <div className="issue-container">
-                                { data.questionResults.wcagResult.issues.map((issue: any, index: number) => (
-                                    <Issue key={index} issue={issue} />
-                                ))}
+                            <h3 className="page-title">{data.pageUrl}</h3>
+                            <div className="test-container">
+                                <WcagResult results={data.questionResults.wcagResult} />
+                                <HttpsResult results={data.questionResults.httpsResult} />
                             </div>
                         </div>
                     );
