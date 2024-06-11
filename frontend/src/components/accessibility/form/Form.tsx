@@ -1,22 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./Form.scss";
 
 type Props = {
-    url: string;
     multipleUrls: string[];
-    isMultiple: boolean;
-    setUrl: (url: string) => void;
     setMultipleUrls: (urls: string[]) => void;
-    setIsMultiple: (isMultiple: boolean) => void;
     handleCheckAccessibility: (send: boolean) => void;
 };
 
-const Form: React.FC<Props> = ({ url, multipleUrls, isMultiple,  setUrl, setMultipleUrls, setIsMultiple, handleCheckAccessibility }: Props) => {
-    const [multiple, setMultiple] = useState<string>("Single"); 
-
-    useEffect(() => {
-        setIsMultiple(multiple === "Multiple");
-    }, [multiple]);
+const Form: React.FC<Props> = ({ multipleUrls, setMultipleUrls, handleCheckAccessibility }: Props) => {
+    const [url, setUrl] = useState<string>("");
 
     return (
         <form onSubmit={(event) => event.preventDefault()} className="form">
@@ -28,22 +20,20 @@ const Form: React.FC<Props> = ({ url, multipleUrls, isMultiple,  setUrl, setMult
                 <div className="container">
                     <input 
                         name="url" 
-                        value={url} 
-                        onChange={(event) => setUrl(event.target.value)} 
-                        className={`input ${isMultiple ? "multiple" : ""}`}
+                        value={url}
+                        onChange={(event) => setUrl(event.target.value)}
+                        className={`input multiple`}
                         type="text" 
                     />
-                    {isMultiple && (
-                        <button 
-                            onClick={() => setMultipleUrls([...multipleUrls, url])} 
-                            className="button"
-                        >
-                            Add URL
-                        </button>
-                    )}
+                    <button 
+                        onClick={() => setMultipleUrls([...multipleUrls, url])} 
+                        className="button"
+                    >
+                        Add URL
+                    </button>
                 </div>
             </div>
-            {isMultiple && multipleUrls.length > 0 &&  (
+            {multipleUrls.length > 0 &&  (
                 <div className="multiple-container">
                     <div className="label">Chosen URL's</div>
                     <div className="multiple-urls">
@@ -62,30 +52,6 @@ const Form: React.FC<Props> = ({ url, multipleUrls, isMultiple,  setUrl, setMult
                 >
                         Check accessibility
                 </button>
-                <div className="selector-container">
-                    <input
-                        type="text"
-                        value={multiple}
-                        onChange={() => {}}
-                        className="input"
-                        name="selector multiple"
-                        readOnly
-                    />
-                    <div className="selector">
-                        <button 
-                            onClick={() => setMultiple("Single")} 
-                            className={`selector-button ${!isMultiple ? "active" : ""}`}
-                        >
-                            Single
-                        </button>
-                        <button 
-                            onClick={() => setMultiple("Multiple")} 
-                            className={`selector-button ${isMultiple ? "active" : ""}`}
-                        >
-                            Multiple
-                        </button>
-                    </div>
-                </div>
             </div>
         </form>
     );

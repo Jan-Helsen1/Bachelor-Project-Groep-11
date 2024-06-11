@@ -1,6 +1,9 @@
 @import "../../../variables.scss";
 
 .issues-popup {
+    max-height: 70vh;
+    max-width: 70vw;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: $spacing-medium;

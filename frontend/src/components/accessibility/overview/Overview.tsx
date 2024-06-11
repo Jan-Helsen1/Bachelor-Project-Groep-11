@@ -8,26 +8,11 @@ type Props = {
 };
 
 const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }: Props) => {
-    const [url, setUrl] = useState<string>("");
     const [multipleUrls, setMultipleUrls] = useState<string[]>([]);
-    const [isMultiple, setIsMultiple] = useState<boolean>(false);
 
     const handleCheckAccessibility = async (send: boolean) => {
 		try {
-			if (send && !isMultiple) {
-				const response = await fetch("http://localhost:3000/api/test", {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ urls: [url] }),
-				});
-				const data = await response.json();
-				console.log(data.results);
-				setReportData(data.results);
-				setShowReport(true);
-			}
-			else if (send) {
+			if (send) {
 				const response = await fetch("http://localhost:3000/api/test", {
 					method: "POST",
 					headers: {
@@ -36,6 +21,7 @@ const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }
 					body: JSON.stringify({ urls: multipleUrls }),
 				});
 				const data = await response.json();
+				console.log(data.results);
 				setReportData(data.results);
 				setShowReport(true);
 			}
@@ -48,12 +34,8 @@ const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }
         <>
 			<div className="body">
 				<Form
-                    url={url}
                     multipleUrls={multipleUrls}
-                    isMultiple={isMultiple}
-                    setUrl={setUrl}
                     setMultipleUrls={setMultipleUrls}
-                    setIsMultiple={setIsMultiple}
                     handleCheckAccessibility={handleCheckAccessibility}
                 />
 			</div>
