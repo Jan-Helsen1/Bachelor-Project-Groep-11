@@ -46,7 +46,7 @@ const addWcagResultsToReport = (doc: jsPDF, wcagResult: any, yPosition: number):
     yPosition = addParagraph(doc, wcagResult.answer, yPosition, 12);
     yPosition = addParagraph(doc, wcagResult.explanation, yPosition, 12);
 
-    doc.roundedRect(15, yPositionStart - 10, 180, yPosition - yPositionStart, 3, 3, 'S');
+    doc.roundedRect(15, yPositionStart - 7, 180, (yPosition + 3)  - yPositionStart, 3, 3, 'S');
 
     return yPosition + 5;
 };
@@ -64,7 +64,7 @@ const addHttpsResultsToReport = (doc: jsPDF, httpsResult: any, yPosition: number
     yPosition = addParagraph(doc, httpsResult.answer, yPosition, 12);
     yPosition = addParagraph(doc, httpsResult.explanation, yPosition, 12);
 
-    doc.roundedRect(15, yPositionStart - 10, 180, yPosition - yPositionStart, 3, 3, 'S');
+    doc.roundedRect(15, yPositionStart - 7, 180, (yPosition + 3) - yPositionStart, 3, 3, 'S');
 
     return yPosition + 5;
 };
