@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Form.scss";
 import Spinner from "../../../components/reusable/Spinner/Spinner.tsx";
 
@@ -13,6 +13,13 @@ const Form: React.FC<Props> = ({ multipleUrls, setMultipleUrls, handleCheckAcces
     const [url, setUrl] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    useEffect(() => {
+        if (multipleUrls.length > 0) {
+            console.log("urls: ", multipleUrls);
+        }
+    }, [multipleUrls])
+
+
     const onCheckAccessibility = async () => {
         setIsLoading(true);
 
@@ -20,6 +27,24 @@ const Form: React.FC<Props> = ({ multipleUrls, setMultipleUrls, handleCheckAcces
             await handleCheckAccessibility(true);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const handleAddUrl = () => {
+        if (url.trim().length === 0) return;
+        if (!isValidUrl(url)) {
+            alert("Invalid URL");
+            return;
+        }
+        setMultipleUrls([...multipleUrls, url])
+    };
+
+    const isValidUrl = (url: string) => {
+        try {
+            new URL(url);
+            return true;
+        } catch (error) {
+            return false;
         }
     };
 
@@ -41,7 +66,7 @@ const Form: React.FC<Props> = ({ multipleUrls, setMultipleUrls, handleCheckAcces
                         type="text" 
                     />
                     <button 
-                        onClick={() => setMultipleUrls([...multipleUrls, url])} 
+                        onClick={handleAddUrl} 
                         className="button"
                     >
                         Add URL

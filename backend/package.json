@@ -4,7 +4,8 @@
   "description": "Backend for accessibility tests",
   "main": "app.ts",
   "scripts": {
-    "start": "nodemon -L app.ts --delay 2",
+    "start": "nodemon app.ts",
+    "dev": "nodemon -L app.ts --delay 2",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "nodemonConfig": {

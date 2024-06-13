@@ -1,4 +1,5 @@
 import AccessibilityOverview from "../AccessibilityOverview/AccessibilityOverview";
+import SecurityOverview from "../SecurityOverview/SecurityOverview";
 import "./Overview.scss";
 
 type Props = {
@@ -32,10 +33,7 @@ const ReportOverview: React.FC<Props> = ({ reportData, fileUrl, setReportData, s
                         <div className="page-container" key={index}>
                             <h3 className="page-title">{data.hostname}</h3>
                             <AccessibilityOverview data={data}/>
-                            {/* <div className="test-container">
-                                <WcagResult results={data.questionResults.wcagResult} />
-                                <HttpsResult results={data.questionResults.httpsResult} />
-                            </div> */}
+                            <SecurityOverview data={data}/>
                         </div>
                     );
                 })}

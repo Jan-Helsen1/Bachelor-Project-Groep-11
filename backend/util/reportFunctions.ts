@@ -7,10 +7,6 @@ const makeReport = (reportData: any[]): jsPDF => {
     // Create a new PDF document
     const doc = new jsPDF();
 
-    // console.log(doc.getFontList());
-
-    // doc.setFont("Calibri", "normal", "normal");
-
     // Set title
     yPosition = addTitle(doc, 'Accessibility Report', yPosition, 20);
 
@@ -20,11 +16,20 @@ const makeReport = (reportData: any[]): jsPDF => {
         // Add hostname
         yPosition = addTitle(doc, reportData[i].hostname, yPosition, 18);
 
+        // Add accessibility title
+        yPosition = addTitle(doc, "Accessibility", yPosition, 16);
+
         // Add WCAG result
-        yPosition = addWcagResultsToReport(doc, reportData[i].questionResults.wcagResult, yPosition);
+        yPosition = addResultToReport(doc, 'WCAG result', reportData[i].questionResults.wcagResult, yPosition);
+
+        // Add accessibility result
+        yPosition = addResultToReport(doc, 'Accessibility result', reportData[i].questionResults.accessibilityResult, yPosition);
+
+        // Add Security title
+        yPosition = addTitle(doc, "Security", yPosition, 16);
 
         // Add HTTPS result
-        yPosition = addHttpsResultsToReport(doc, reportData[i].questionResults.httpsResult, yPosition);
+        yPosition = addResultToReport(doc, 'HTTPS result', reportData[i].questionResults.httpsResult, yPosition);
 
         // Add WCAG issues
         yPosition = addWcagIssuesToReport(doc, reportData[i].questionResults.wcagResult.hostIssues, yPosition);
@@ -38,31 +43,6 @@ const makeReport = (reportData: any[]): jsPDF => {
 
     // Return the PDF document
     return doc; 
-};
-
-const addWcagResultsToReport = (doc: jsPDF, wcagResult: any, yPosition: number): number => {
-    // Check page break
-    yPosition = checkPageBreak(doc, yPosition, 240);
-    
-    // Add title
-    yPosition = addTitle(doc, "Accessibility", yPosition, 16);
-
-    // yPosition start
-    const yPositionStart = yPosition;
-
-    // Add WCAG result nog verder schrijven
-    yPosition = addTitle(doc, 'WCAG result', yPosition, 14);
-    yPosition = addParagraph(doc, wcagResult.question, yPosition, 12);
-    yPosition = addParagraph(doc, wcagResult.answer, yPosition, 12);
-    yPosition = addParagraph(doc, wcagResult.explanation, yPosition, 12);
-
-    // Add url
-    yPosition = addLinkElement(doc, 'Click here for more info', wcagResult.url, yPosition, 12);
-
-    // Add border
-    doc.roundedRect(15, yPositionStart - 7, 180, (yPosition + 3)  - yPositionStart, 3, 3, 'S');
-
-    return yPosition + 5;
 };
 
 const addWcagIssuesToReport = (doc: jsPDF, hostIssues: any, yPosition: number): number => {
@@ -111,24 +91,21 @@ const addIssueToReport = (doc: jsPDF, issue: any, yPosition: number): number => 
     return yPosition + 5;
 };
 
-const addHttpsResultsToReport = (doc: jsPDF, httpsResult: any, yPosition: number): number => {
+const addResultToReport = (doc: jsPDF, title: string, result: any, yPosition: number): number => {
     // Check page break
     yPosition = checkPageBreak(doc, yPosition, 240);
-    
-    // Add title
-    yPosition = addTitle(doc, "Security", yPosition, 16);
 
-    // yPostion start
+    // yPosition start
     const yPositionStart = yPosition;
 
-    // Add HTTPS result nog verder schrijven
-    yPosition = addTitle(doc, 'HTTPS result', yPosition, 14);
-    yPosition = addParagraph(doc, httpsResult.question, yPosition, 12);
-    yPosition = addParagraph(doc, httpsResult.answer, yPosition, 12);
-    yPosition = addParagraph(doc, httpsResult.explanation, yPosition, 12);
+    // Add result to report
+    yPosition = addTitle(doc, title, yPosition, 14);
+    yPosition = addParagraph(doc, result.question, yPosition, 12);
+    yPosition = addParagraph(doc, result.answer, yPosition, 12);
+    yPosition = addParagraph(doc, result.explanation, yPosition, 12);
 
     // Add url
-    yPosition = addLinkElement(doc, 'Click here for more info', httpsResult.url, yPosition, 12);
+    yPosition = addLinkElement(doc, 'Click here for more info', result.url, yPosition, 12);
 
     // Add border
     doc.roundedRect(15, yPositionStart - 7, 180, (yPosition + 3) - yPositionStart, 3, 3, 'S');
@@ -136,14 +113,8 @@ const addHttpsResultsToReport = (doc: jsPDF, httpsResult: any, yPosition: number
     return yPosition + 5;
 };
 
-const addAccessibilityTestToReport = (doc: jsPDF, accessibilityTest: any, yPosition: number): number => {
-    
-    return 0;
-};
-
 const addTitle = (doc: jsPDF, issueTitle: string, yPosition: number, fontSize: number): number => {
     // Set the font
-    // doc.setFont("Calibri", "normal", 600);
     doc.setFontSize(fontSize);
 
     // Split issue title into multiple lines
