@@ -48,18 +48,25 @@ const Form: React.FC<Props> = ({ multipleUrls, setMultipleUrls, handleCheckAcces
                     </button>
                 </div>
             </div>
-            {multipleUrls.length > 0 &&  (
-                <div className="multiple-container">
-                    <div className="label">Chosen URL's</div>
-                    <div className="multiple-urls">
-                        {multipleUrls.map((url, index) => (
-                            <div key={index} className="url">
-                            { url }
-                            </div>
-                        ))}
-                    </div>
+            <div className="multiple-container">
+                <div className="label">Chosen URL's</div>
+                <div className="multiple-urls">
+                    { multipleUrls.length > 0 ? (
+                        <>
+                            {multipleUrls.map((url, index) => (
+                                <div key={index} className="url">
+                                    { url }
+                                </div>
+                            ))}
+                        </>
+                    ): (
+                        <div className="url">
+                            No URL's added
+                        </div>
+                    )}
+                    
                 </div>
-            )}
+            </div>
             <div className="button-container">
                 <button
                     onClick={onCheckAccessibility}

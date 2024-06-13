@@ -1,0 +1,18 @@
+@import "../../../variables.scss";
+
+.result-container {
+    display: flex;
+    flex-direction: column;
+    width: 46%;
+    padding: $spacing-medium;
+    border-radius: $border-radius-medium;
+    border: $border-light;
+    background-color: $primary-color-grey;
+    gap: $spacing-medium;
+
+    .test-title {
+        margin: 0;
+        padding: $spacing-small 0;
+        font-size: $font-size-large;
+    };
+}
