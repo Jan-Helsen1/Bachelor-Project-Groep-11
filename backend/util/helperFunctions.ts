@@ -2,6 +2,7 @@ import messages from '../WCAG/messages';
 import questions from '../WCAG/questions';
 import pa11y from 'pa11y';
 import https from 'https';
+import { TLSSocket } from 'tls';
 
 // Pa11y options
 const options = {
@@ -117,8 +118,8 @@ const runHttpsTest = (url: string): Promise<any> => {
         // Create the httpsResult object
         const httpsResult = { 
             question: questions.https.question,
-            answer: null,
-            explanation: null,
+            answer: "Not found",
+            explanation: "Not found",
             score: 0
         };
 
@@ -146,6 +147,14 @@ const runHttpsTest = (url: string): Promise<any> => {
             const request = https.request(url, httpsOptions, (res) => {
                 if (res.statusCode === 200) {
                     // Handle the response if needed
+                    if (res.socket instanceof TLSSocket && res.socket.encrypted) {
+                        httpsResult.answer = questions.https.answers.answer5.answer;
+                        httpsResult.explanation = questions.https.answers.answer5.explanation;
+                    }
+                    else {
+                        httpsResult.answer = questions.https.answers.answer1.answer;
+                        httpsResult.explanation = questions.https.answers.answer1.explanation;
+                    }
                     resolve(httpsResult); // Resolve the promise with httpsResult
                 } else {
                     // Handle other status codes if needed

@@ -7,6 +7,10 @@ const makeReport = (reportData: any[]): jsPDF => {
     // Create a new PDF document
     const doc = new jsPDF();
 
+    // console.log(doc.getFontList());
+
+    // doc.setFont("Calibri", "normal", "normal");
+
     // Set title
     yPosition = addTitle(doc, 'Accessibility Report', yPosition, 20);
 
@@ -14,13 +18,16 @@ const makeReport = (reportData: any[]): jsPDF => {
     let i = 0;
     while ( i < reportData.length ) {
         // Add hostname
-        yPosition = addSubTitle(doc, reportData[i].hostname, yPosition, 18);
+        yPosition = addTitle(doc, reportData[i].hostname, yPosition, 18);
 
         // Add WCAG result
         yPosition = addWcagResultsToReport(doc, reportData[i].questionResults.wcagResult, yPosition);
 
         // Add HTTPS result
         yPosition = addHttpsResultsToReport(doc, reportData[i].questionResults.httpsResult, yPosition);
+
+        // Add WCAG issues
+        yPosition = addWcagIssuesToReport(doc, reportData[i].questionResults.wcagResult.hostIssues, yPosition);
 
         // Add page break
         if (i < reportData.length - 1) yPosition = addPageBreak(doc, yPosition);
@@ -34,74 +41,103 @@ const makeReport = (reportData: any[]): jsPDF => {
 };
 
 const addWcagResultsToReport = (doc: jsPDF, wcagResult: any, yPosition: number): number => {
+    // Check page break
+    yPosition = checkPageBreak(doc, yPosition, 240);
+    
     // Add title
-    yPosition = addIssueTitle(doc, "Accessibility", yPosition, 16);
+    yPosition = addTitle(doc, "Accessibility", yPosition, 16);
 
     // yPosition start
     const yPositionStart = yPosition;
 
     // Add WCAG result nog verder schrijven
-    yPosition = addIssueTitle(doc, 'WCAG result', yPosition, 14);
+    yPosition = addTitle(doc, 'WCAG result', yPosition, 14);
     yPosition = addParagraph(doc, wcagResult.question, yPosition, 12);
     yPosition = addParagraph(doc, wcagResult.answer, yPosition, 12);
     yPosition = addParagraph(doc, wcagResult.explanation, yPosition, 12);
 
+    // Add border
     doc.roundedRect(15, yPositionStart - 7, 180, (yPosition + 3)  - yPositionStart, 3, 3, 'S');
 
     return yPosition + 5;
 };
 
-const addHttpsResultsToReport = (doc: jsPDF, httpsResult: any, yPosition: number): number => {
+const addWcagIssuesToReport = (doc: jsPDF, hostIssues: any, yPosition: number): number => {
+    // Check page break
+    yPosition = checkPageBreak(doc, yPosition, 230);
+
     // Add title
-    yPosition = addIssueTitle(doc, "Security", yPosition, 16);
+    yPosition = addTitle(doc, 'WCAG issues', yPosition, 16);
+
+    // Loop over the host issues
+    hostIssues.forEach((hostIssue: any) => {
+        yPosition = addIssueToReport(doc, hostIssue, yPosition);
+    });
+
+    return yPosition + 5;
+};
+
+const addIssueToReport = (doc: jsPDF, issue: any, yPosition: number): number => {
+    // Add title
+    yPosition = addTitle(doc, issue.documentTitle, yPosition, 14);
+
+    // Get the issues
+    const issues = issue.issues;
+    
+    // Loop over the issues
+    issues.forEach((issue: any) => {
+        // Check page break
+        yPosition = checkPageBreak(doc, yPosition, 230);
+
+        // yPosition start
+        const yPositionStart = yPosition;
+
+        // Add WCAG issues nog verder schrijven
+        yPosition = addTitle(doc, `${issue.type}: ${issue.message}`, yPosition, 12);
+        yPosition = addParagraph(doc, `${issue.wcag} ${issue.code}`, yPosition, 12);
+        yPosition = addParagraph(doc, issue.explanation, yPosition, 12);
+        yPosition = addParagraph(doc, issue.appliesTo, yPosition, 12);
+        yPosition = addParagraph(doc, issue.context, yPosition, 12);
+
+        // Add border
+        doc.roundedRect(15, yPositionStart - 5, 180, yPosition - yPositionStart, 3, 3, 'S');
+
+        // Add spacing
+        yPosition += 5;
+    });
+    return yPosition + 5;
+};
+
+const addHttpsResultsToReport = (doc: jsPDF, httpsResult: any, yPosition: number): number => {
+    // Check page break
+    yPosition = checkPageBreak(doc, yPosition, 240);
+    
+    // Add title
+    yPosition = addTitle(doc, "Security", yPosition, 16);
 
     // yPostion start
     const yPositionStart = yPosition;
 
     // Add HTTPS result nog verder schrijven
-    yPosition = addIssueTitle(doc, 'HTTPS result', yPosition, 14);
+    yPosition = addTitle(doc, 'HTTPS result', yPosition, 14);
     yPosition = addParagraph(doc, httpsResult.question, yPosition, 12);
     yPosition = addParagraph(doc, httpsResult.answer, yPosition, 12);
     yPosition = addParagraph(doc, httpsResult.explanation, yPosition, 12);
 
+    // Add border
     doc.roundedRect(15, yPositionStart - 7, 180, (yPosition + 3) - yPositionStart, 3, 3, 'S');
 
     return yPosition + 5;
 };
 
-const addTitle = (doc: jsPDF, title: string, yPosition: number, fontSize: number): number => {
-    // Check page break
-    yPosition = checkPageBreak(doc, yPosition);
-
-    // Set the font size
-    doc.setFontSize(fontSize);
-
-    // Set the document title
-    doc.text(title, 20, yPosition);
-
-    // Add spacing to title 
-    return yPosition + 10;
+const addAccessibilityTestToReport = (doc: jsPDF, accessibilityTest: any, yPosition: number): number => {
+    
+    return 0;
 };
 
-const addSubTitle = (doc: jsPDF, subTitle: string, yPosition: number, fontSize: number): number => {
-    // Check page break
-    yPosition = checkPageBreak(doc, yPosition);
-    
-    // Set the font size
-    doc.setFontSize(fontSize);
-
-    // Set the document title
-    doc.text(subTitle, 20, yPosition);
-
-    // Add spacing to title
-    return yPosition + 10;
-};
-
-const addIssueTitle = (doc: jsPDF, issueTitle: string, yPosition: number, fontSize: number): number => {
-    // Check page break
-    yPosition = checkPageBreak(doc, yPosition);
-    
-    // Set the font size
+const addTitle = (doc: jsPDF, issueTitle: string, yPosition: number, fontSize: number): number => {
+    // Set the font
+    // doc.setFont("Calibri", "normal", 600);
     doc.setFontSize(fontSize);
 
     // Split issue title into multiple lines
@@ -115,9 +151,6 @@ const addIssueTitle = (doc: jsPDF, issueTitle: string, yPosition: number, fontSi
 };
 
 const addParagraph = (doc: jsPDF, paragraph: string, yPosition: number, fontSize: number): number => {
-    // Check page break
-    yPosition = checkPageBreak(doc, yPosition);
-    
     // Set the font size
     doc.setFontSize(fontSize);
 
@@ -130,9 +163,9 @@ const addParagraph = (doc: jsPDF, paragraph: string, yPosition: number, fontSize
     return yPosition + (splitParagraph.length - 1) * 5 + 8;
 };
 
-const checkPageBreak = (doc: jsPDF, yPosition: number): number => {
+const checkPageBreak = (doc: jsPDF, yPosition: number, maxPosition: number): number => {
     // Check if the position is almost at the end of the page
-    if (yPosition > 270) {
+    if (yPosition > maxPosition) {
         doc.addPage();
         return 30;
     }
