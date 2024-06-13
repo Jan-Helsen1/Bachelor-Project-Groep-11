@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "./Form.scss";
+import Spinner from "../../../components/reusable/Spinner/Spinner.tsx";
+
 
 type Props = {
     multipleUrls: string[];
@@ -9,7 +11,19 @@ type Props = {
 
 const Form: React.FC<Props> = ({ multipleUrls, setMultipleUrls, handleCheckAccessibility }: Props) => {
     const [url, setUrl] = useState<string>("");
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const onCheckAccessibility = async () => {
+        setIsLoading(true);
+
+        try {
+            await handleCheckAccessibility(true);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    
     return (
         <form onSubmit={(event) => event.preventDefault()} className="form">
             <h2 className="title">Test your accessibility</h2>
@@ -21,6 +35,7 @@ const Form: React.FC<Props> = ({ multipleUrls, setMultipleUrls, handleCheckAcces
                     <input 
                         name="url" 
                         value={url}
+                        placeholder="https://www.yourUrl.be"
                         onChange={(event) => setUrl(event.target.value)}
                         className={`input multiple`}
                         type="text" 
@@ -47,10 +62,11 @@ const Form: React.FC<Props> = ({ multipleUrls, setMultipleUrls, handleCheckAcces
             )}
             <div className="button-container">
                 <button
-                    onClick={() => handleCheckAccessibility(true)}
+                    onClick={onCheckAccessibility}
                     className="button"
+                    disabled={isLoading}
                 >
-                        Check accessibility
+                    {isLoading ? < Spinner /> : 'Check accessibility'}
                 </button>
             </div>
         </form>

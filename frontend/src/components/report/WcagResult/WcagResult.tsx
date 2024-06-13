@@ -24,7 +24,8 @@ const WcagResult: React.FC<Props> = ({ results }: Props) => {
                 <b>Answer: </b>{results.answer}
             </div>
             <div className="explanation-container">
-                <b>Explanation: </b> {results.explanation}
+                <b>Explanation: </b> {results.explanation} 
+                <a href="https://squizlabs.github.io/HTML_CodeSniffer/Standards/WCAG2/">Click here for more info</a>
             </div>
             <div className="score-container">
                 <b>Score: </b>{results.score}
