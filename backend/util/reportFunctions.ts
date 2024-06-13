@@ -56,6 +56,9 @@ const addWcagResultsToReport = (doc: jsPDF, wcagResult: any, yPosition: number):
     yPosition = addParagraph(doc, wcagResult.answer, yPosition, 12);
     yPosition = addParagraph(doc, wcagResult.explanation, yPosition, 12);
 
+    // Add url
+    yPosition = addLinkElement(doc, 'Click here for more info', wcagResult.url, yPosition, 12);
+
     // Add border
     doc.roundedRect(15, yPositionStart - 7, 180, (yPosition + 3)  - yPositionStart, 3, 3, 'S');
 
@@ -124,6 +127,9 @@ const addHttpsResultsToReport = (doc: jsPDF, httpsResult: any, yPosition: number
     yPosition = addParagraph(doc, httpsResult.answer, yPosition, 12);
     yPosition = addParagraph(doc, httpsResult.explanation, yPosition, 12);
 
+    // Add url
+    yPosition = addLinkElement(doc, 'Click here for more info', httpsResult.url, yPosition, 12);
+
     // Add border
     doc.roundedRect(15, yPositionStart - 7, 180, (yPosition + 3) - yPositionStart, 3, 3, 'S');
 
@@ -161,6 +167,16 @@ const addParagraph = (doc: jsPDF, paragraph: string, yPosition: number, fontSize
     doc.text(splitParagraph, 20, yPosition);
 
     return yPosition + (splitParagraph.length - 1) * 5 + 8;
+};
+
+const addLinkElement = (doc: jsPDF, text: string, url: string, yPosition: number, fontSize: number): number => {
+    // Set the font size
+    doc.setFontSize(fontSize);
+
+    // Add the link to the document
+    doc.textWithLink(text, 20, yPosition, { url });
+
+    return yPosition + 10;
 };
 
 const checkPageBreak = (doc: jsPDF, yPosition: number, maxPosition: number): number => {

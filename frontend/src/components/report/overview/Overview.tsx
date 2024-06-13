@@ -1,5 +1,4 @@
-import HttpsResult from "../HttpsResult/HttpsResult";
-import WcagResult from "../WcagResult/WcagResult";
+import AccessibilityOverview from "../AccessibilityOverview/AccessibilityOverview";
 import "./Overview.scss";
 
 type Props = {
@@ -32,10 +31,11 @@ const ReportOverview: React.FC<Props> = ({ reportData, fileUrl, setReportData, s
                     return (
                         <div className="page-container" key={index}>
                             <h3 className="page-title">{data.hostname}</h3>
-                            <div className="test-container">
+                            <AccessibilityOverview data={data}/>
+                            {/* <div className="test-container">
                                 <WcagResult results={data.questionResults.wcagResult} />
                                 <HttpsResult results={data.questionResults.httpsResult} />
-                            </div>
+                            </div> */}
                         </div>
                     );
                 })}

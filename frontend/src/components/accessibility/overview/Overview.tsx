@@ -8,7 +8,7 @@ type Props = {
 	setReportData: (reportData: any) => void;
 };
 
-const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }: Props) => {
+const HomeOverview: React.FC<Props> = ({ setShowReport, setReportData }: Props) => {
     const [multipleUrls, setMultipleUrls] = useState<string[]>([]);
 
     const handleCheckAccessibility = async (send: boolean) => {
@@ -61,4 +61,4 @@ const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }
     );
 };
 
-export default AccessibilityOverview;
+export default HomeOverview;

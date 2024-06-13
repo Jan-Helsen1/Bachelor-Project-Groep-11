@@ -3,6 +3,9 @@ import questions from '../WCAG/questions';
 import pa11y from 'pa11y';
 import https from 'https';
 import { TLSSocket } from 'tls';
+import { JSDOM } from 'jsdom';
+import tm from 'text-miner';
+import { Readability } from '@mozilla/readability';
 
 // Pa11y options
 const options = {
@@ -36,6 +39,9 @@ const runTestsForHostname = async (hostname: string, urls: string[]) => {
     // Run https test
     const httpsResult = await runHttpsTest(urls[0]);
 
+    // Run accessibility test
+    const accessibilityResult = await runAccessibilityTest(urls);
+
     // Return the results
     return {
         hostname: hostname,
@@ -43,6 +49,7 @@ const runTestsForHostname = async (hostname: string, urls: string[]) => {
         questionResults: {
             wcagResult,
             httpsResult,
+            accessibilityResult
         },
     };
 };
@@ -54,7 +61,8 @@ const runWcagTest = async (urls: string[]) => {
         answer: null,
         explanation: null,
         score: 0,
-        hostIssues: []
+        hostIssues: [],
+        url: questions.wcag.answers.answer1.url
     };
 
     // Run pa11y on the URL's
@@ -80,6 +88,7 @@ const runWcagTest = async (urls: string[]) => {
     if (allIssues.length === 0) {
         wcagResult.answer = questions.wcag.answers.answer5.answer;
         wcagResult.explanation = questions.wcag.answers.answer5.explanation;
+        wcagResult.url = questions.wcag.answers.answer5.url;
     }
     else {
         const lowestWcagIssue = allIssues.reduce((acc: any, issue: any) => {
@@ -94,14 +103,17 @@ const runWcagTest = async (urls: string[]) => {
             case "WCAG2A":
                 wcagResult.answer = questions.wcag.answers.answer2.answer;
                 wcagResult.explanation = questions.wcag.answers.answer2.explanation;
+                wcagResult.url = questions.wcag.answers.answer2.url;
                 break;
             case "WCAG2AA":
                 wcagResult.answer = questions.wcag.answers.answer3.answer;
                 wcagResult.explanation = questions.wcag.answers.answer3.explanation;
+                wcagResult.url = questions.wcag.answers.answer3.url;
                 break;
             case "WCAG2AAA":
                 wcagResult.answer = questions.wcag.answers.answer4.answer;
                 wcagResult.explanation = questions.wcag.answers.answer4.explanation;
+                wcagResult.url = questions.wcag.answers.answer4.url;
                 break;
             default:
 
@@ -120,7 +132,8 @@ const runHttpsTest = (url: string): Promise<any> => {
             question: questions.https.question,
             answer: "Not found",
             explanation: "Not found",
-            score: 0
+            score: 0,
+            url: questions.https.answers.answer1.url
         };
 
         // Create the httpsOptions object
@@ -132,10 +145,12 @@ const runHttpsTest = (url: string): Promise<any> => {
                 if (!cert) {
                     httpsResult.answer = questions.https.answers.answer1.answer;
                     httpsResult.explanation = questions.https.answers.answer1.explanation;
+                    httpsResult.url = questions.https.answers.answer1.url;
                 }
                 else {
                     httpsResult.answer = questions.https.answers.answer5.answer;
                     httpsResult.explanation = questions.https.answers.answer5.explanation;
+                    httpsResult.url = questions.https.answers.answer5.url;
                 }
                 resolve(httpsResult); // Resolve the promise with httpsResult
                 return undefined;
@@ -150,11 +165,14 @@ const runHttpsTest = (url: string): Promise<any> => {
                     if (res.socket instanceof TLSSocket && res.socket.encrypted) {
                         httpsResult.answer = questions.https.answers.answer5.answer;
                         httpsResult.explanation = questions.https.answers.answer5.explanation;
+                        httpsResult.url = questions.https.answers.answer5.url;
                     }
                     else {
                         httpsResult.answer = questions.https.answers.answer1.answer;
                         httpsResult.explanation = questions.https.answers.answer1.explanation;
+                        httpsResult.url = questions.https.answers.answer1.url;
                     }
+
                     resolve(httpsResult); // Resolve the promise with httpsResult
                 } else {
                     // Handle other status codes if needed
@@ -174,6 +192,42 @@ const runHttpsTest = (url: string): Promise<any> => {
             reject(error); // Reject the promise with the caught error
         }
     });
+};
+
+const runAccessibilityTest = async (urls: string[]) => {
+    const accessibilityResult = {
+        question: questions.accessibility.question,
+        answer: "Not found",
+        explanation: "Not found",
+        score: 0,
+        url: questions.accessibility.answers.answer1.url
+    }
+
+    try {
+        const corpus = new tm.Corpus([]);
+        const documents: string[] = [];
+        const promises = urls.map(async (url) => {
+            const response = await fetch(url);
+            const html = await response.text();
+            documents.push(html);
+        });
+
+        await Promise.all(promises);
+
+        documents.forEach((document) => {
+            const dom = new JSDOM(document);
+            const reader = new Readability(dom.window.document);
+            const article = reader.parse();
+            corpus.addDoc(article.textContent);
+        });
+        
+        const terms = new tm.DocumentTermMatrix(corpus);
+        console.log("documents: ", terms.data)
+    } catch (error: any) {
+        console.error(error);
+    }
+
+    return accessibilityResult;
 };
 
 const sortUrlsByHostname = (urls: string[]) => {

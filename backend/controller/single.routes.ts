@@ -35,6 +35,9 @@
  *                                  items:
  *                                      type: object
  *                                      $ref: '#/components/schemas/issuesPerUrl'
+ *                              url:
+ *                                  type: string
+ *                                  example: https://www.w3.org/TR/WCAG21/#background-on-wcag-2
  *                      httpsResult:
  *                          type: object
  *                          properties:
@@ -49,6 +52,27 @@
  *                                  example: Very good. You are already applying HTTPS. Always make sure you roll out the latest security patches. The cybersecurity world is constantly changing so make sure you have all the latest updates installed.
  *                              score:
  *                                  type: number
+ *                              url:
+ *                                  type: string
+ *                                  example: https://www.w3.org/TR/WCAG21/#background-on-wcag-2
+ *                      accessibilityResult:
+ *                          type: object
+ *                          properties:
+ *                              question:
+ *                                  type: string
+ *                                  example: Does your website have a clear structure?
+ *                              answer:
+ *                                  type: string
+ *                                  example: Yes
+ *                              explanation:
+ *                                  type: string
+ *                                  example: Very good. A clear structure is important for the user experience. It helps the user to find the information they are looking for quickly and easily.
+ *                              score:
+ *                                  type: number
+ *                                  example: 100
+ *                              url:
+ *                                  type: string
+ *                                  example: https://www.w3.org/TR/WCAG21/#background-on-wcag-2
  *      issue:
  *          type: object
  *          properties:
