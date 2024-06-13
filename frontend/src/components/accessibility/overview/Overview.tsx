@@ -34,16 +34,28 @@ const AccessibilityOverview: React.FC<Props> = ({ setShowReport, setReportData }
     return (
         <>
 			<div className="body">
-				<div className="yellow-container">
-					<h1>What is ValidAll? What is digital inclusion? Discover everything here!</h1>
-					<YellowBox title={'What is digital inclusion'} content={'The world in which we live is becoming more digital day by day. Many people risk to be excluded.'} />
-					<YellowBox title={'About DigitAll'} content={'DigitAll is a coalition of companies, social organisations and government bodies working together for more digital inclusion in Belgium. Discover who we are and get to know our initiatives to improve digital inclusion.'} />
+				<div className="grid-container">
+					<div className="grid-item div1">
+						<h1>What is ValidAll? What is digital inclusion? Discover everything here!</h1>
+					</div>
+					<div className="grid-item div2">
+						<YellowBox title={'What is digital inclusion'} content={'The world in which we live is becoming more digital day by day. Many people risk to be excluded.'} />
+					</div>
+					<div className="grid-item div3">
+						<YellowBox title={'About DigitAll'} content={'DigitAll is a coalition of companies, social organisations and government bodies working together for more digital inclusion in Belgium. Discover who we are and get to know our initiatives to improve digital inclusion.'} />
+					</div>
+					<div className="grid-item div4"> </div>
+					<div className="grid-item form-container div5">
+						<Form
+							multipleUrls={multipleUrls}
+							setMultipleUrls={setMultipleUrls}
+							handleCheckAccessibility={handleCheckAccessibility}
+						/>	 
+					</div>
+					<div className="grid-item div6"> </div>
+					<div className="grid-item div7"> </div>
+					<div className="grid-item div8"> </div>
 				</div>
-				<Form
-                    multipleUrls={multipleUrls}
-                    setMultipleUrls={setMultipleUrls}
-                    handleCheckAccessibility={handleCheckAccessibility}
-                />
 			</div>
         </>
     );

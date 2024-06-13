@@ -1,10 +1,5 @@
 @import "../../../variables.scss";
 
-.yellow-container {
-    display: flex;
-    flex-direction: row;
-}
-
 .yellow-container h1{
     padding: 15px;
     margin-left: 50px;
@@ -16,8 +11,6 @@
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 15px;
-    margin-bottom: 50px;
     width: 300px;
     box-shadow: $shadow-small;
 }
