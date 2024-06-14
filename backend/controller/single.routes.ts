@@ -28,8 +28,6 @@
  *                              explanation:
  *                                  type: string
  *                                  example: You are already well on your way of complying with a WCAG standard but there is still some room for improvement. Accessibility experts such as ElevenWays and the official websites of WCAG can help you find out how to further increase the accessibility of your website or app.
- *                              score:
- *                                  type: number
  *                              hostIssues:
  *                                  type: array
  *                                  items:
@@ -50,8 +48,6 @@
  *                              explanation:
  *                                  type: string
  *                                  example: Very good. You are already applying HTTPS. Always make sure you roll out the latest security patches. The cybersecurity world is constantly changing so make sure you have all the latest updates installed.
- *                              score:
- *                                  type: number
  *                              url:
  *                                  type: string
  *                                  example: https://www.w3.org/TR/WCAG21/#background-on-wcag-2
@@ -67,9 +63,6 @@
  *                              explanation:
  *                                  type: string
  *                                  example: Very good. A clear structure is important for the user experience. It helps the user to find the information they are looking for quickly and easily.
- *                              score:
- *                                  type: number
- *                                  example: 100
  *                              url:
  *                                  type: string
  *                                  example: https://www.w3.org/TR/WCAG21/#background-on-wcag-2

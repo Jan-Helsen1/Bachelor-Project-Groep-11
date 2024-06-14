@@ -52,10 +52,23 @@ const HomeOverview: React.FC<Props> = ({ setShowReport, setReportData }: Props) 
 						/>
 					</div>
 					<div className="grid-item div4">
-						<YellowBox title={'About DigitAll'} content={'DigitAll is a coalition of companies, social organisations and government bodies working together for more digital inclusion in Belgium. Discover who we are and get to know our initiatives to improve digital inclusion.'} />
+						<YellowBox 
+							title={'About DigitAll'} 
+							content={'DigitAll is a coalition of companies, social organisations and government bodies working together for more digital inclusion in Belgium. Discover who we are and get to know our initiatives to improve digital inclusion.'} 
+						/>
 					</div>
-					<div className="grid-item div5"> </div>
-					<div className="grid-item div6"> </div>
+					<div className="grid-item div5">
+						<YellowBox
+							title="Charter"
+							content="To enhacne digital inclusion, DigitAll created a charter with 9 engagements."
+						/>
+					</div>
+					<div className="grid-item div6">
+						<YellowBox 
+							title="Partners DigitAll"
+							content="Digitall thrives by the commitment from companies, governments and social organisations."
+						/>
+					</div>
 				</div>
 			</div>
         </>

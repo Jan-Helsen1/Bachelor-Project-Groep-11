@@ -16,10 +16,15 @@ const options = {
     },
 };
 
+let score = 0;
+
 const runTests = async (urls: string[]) => {
     // Sort urls per hostname
     // This is done to prevent multiple requests to the same hostname
     const sortedUrls = sortUrlsByHostname(urls);
+
+    // set score to 0
+    score = 0;
 
     // Run tests for each hostname
     // Run tests for each hostname
@@ -46,6 +51,7 @@ const runTestsForHostname = async (hostname: string, urls: string[]) => {
     return {
         hostname: hostname,
         urls,
+        score,
         questionResults: {
             wcagResult,
             httpsResult,
@@ -60,7 +66,6 @@ const runWcagTest = async (urls: string[]) => {
         question: questions.wcag.question,
         answer: null,
         explanation: null,
-        score: 0,
         hostIssues: [],
         url: questions.wcag.answers.answer1.url
     };
@@ -83,7 +88,6 @@ const runWcagTest = async (urls: string[]) => {
     await Promise.all(pa11yPromises);
 
     // Wcag answer for question
-    // Score berekening nog toevoegen
     const allIssues = wcagResult.hostIssues.flatMap((hostIssue: any) => hostIssue.issues);
     if (allIssues.length === 0) {
         wcagResult.answer = questions.wcag.answers.answer5.answer;
@@ -132,7 +136,6 @@ const runHttpsTest = (url: string): Promise<any> => {
             question: questions.https.question,
             answer: "Not found",
             explanation: "Not found",
-            score: 0,
             url: questions.https.answers.answer1.url
         };
 
@@ -199,7 +202,6 @@ const runAccessibilityTest = async (urls: string[]) => {
         question: questions.accessibility.question,
         answer: "Not found",
         explanation: "Not found",
-        score: 0,
         url: questions.accessibility.answers.answer1.url
     }
 

@@ -21,9 +21,6 @@ const HttpsResult: React.FC<Props> = ({ results }: Props) => {
                 </div> 
                 <a href={results.url}>Click here for more info</a>
             </div>
-            <div className="score-container">
-                <b>Score: </b>{results.score}
-            </div>
         </div>
     );
 };
