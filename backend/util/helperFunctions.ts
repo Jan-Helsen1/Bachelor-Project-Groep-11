@@ -6,6 +6,7 @@ import { TLSSocket } from 'tls';
 import { JSDOM } from 'jsdom';
 import tm from 'text-miner';
 import { Readability } from '@mozilla/readability';
+import cheerioModule from 'cheerio';
 
 // Pa11y options
 const options = {
@@ -207,24 +208,41 @@ const runAccessibilityTest = async (urls: string[]) => {
 
     try {
         const corpus = new tm.Corpus([]);
-        const documents: string[] = [];
+        // const documents: string[] = [];
         const promises = urls.map(async (url) => {
             const response = await fetch(url);
             const html = await response.text();
-            documents.push(html);
+            // console.log(html)
+            // documents.push(html);
+            const $ = cheerioModule.load(html);
+            const text = $('body').text();
+            // jsdom eruit gooien
+            // const dom = new JSDOM(html);
+            // console.log("document: ", dom.window.document);
+            // mozilla readability eruit gooien
+            // const reader = new Readability(dom.window.document);
+            // const article = reader.parse();
+            // console.log("article: ", article);
+            corpus.addDoc(text);
         });
 
         await Promise.all(promises);
 
-        documents.forEach((document) => {
-            const dom = new JSDOM(document);
-            const reader = new Readability(dom.window.document);
-            const article = reader.parse();
-            corpus.addDoc(article.textContent);
-        });
+        // documents.forEach((document) => {
+        //     console.log(document);
+        //     const dom = new JSDOM(document);
+        //     const reader = new Readability(dom.window.document);
+        //     const article = reader.parse();
+        //     // console.log(article.textContent);
+        //     corpus.addDoc(article.textContent);
+        // });
         
         const terms = new tm.DocumentTermMatrix(corpus);
-        console.log("documents: ", terms.data)
+        const regex = new RegExp(".*Toegankelijkheidsverklaring.*");
+        terms.vocabulary.forEach((term) => {
+            if (regex.test(term)) console.log("term: ", term);
+        });
+        // console.log("documents: ", terms.vocabulary)
     } catch (error: any) {
         console.error(error);
     }
