@@ -1,4 +1,5 @@
 import AccessibilityOverview from "../AccessibilityOverview/AccessibilityOverview";
+import Scoring from "../Scoring/Scoring";
 import SecurityOverview from "../SecurityOverview/SecurityOverview";
 import "./Overview.scss";
 
@@ -32,6 +33,7 @@ const ReportOverview: React.FC<Props> = ({ reportData, fileUrl, setReportData, s
                     return (
                         <div className="page-container" key={index}>
                             <h3 className="page-title">{data.hostname}</h3>
+                            <Scoring score={data.score}/>
                             <AccessibilityOverview data={data}/>
                             <SecurityOverview data={data}/>
                         </div>
