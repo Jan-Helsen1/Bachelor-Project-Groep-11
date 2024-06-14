@@ -8,7 +8,7 @@ type Props = {
 const AccessibilityResult: React.FC<Props> = ({ results }: Props) => {
     return (
         <div className="result-container">
-            <h4 className="test-title">Test WCAG</h4>
+            <h4 className="test-title">Test Accessibility</h4>
             <div className="question-container">
                 <b>Question: </b>{results.question}
             </div>

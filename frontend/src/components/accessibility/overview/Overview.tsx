@@ -13,7 +13,7 @@ const HomeOverview: React.FC<Props> = ({ setShowReport, setReportData }: Props) 
 
     const handleCheckAccessibility = async (send: boolean) => {
 		try {
-			if (send) {
+			if (send && multipleUrls.length > 0) {
 				const response = await fetch("http://localhost:3000/api/test", {
 					method: "POST",
 					headers: {
@@ -25,6 +25,9 @@ const HomeOverview: React.FC<Props> = ({ setShowReport, setReportData }: Props) 
 				console.log(data.results);
 				setReportData(data.results);
 				setShowReport(true);
+			}
+			else {
+				alert("Please add at least one URL");
 			}
 		} catch (error: any) {
 			console.error(error.message);

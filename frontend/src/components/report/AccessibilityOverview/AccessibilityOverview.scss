@@ -1,6 +1,7 @@
 @import "../../../variables.scss";
 
 .accessibility-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: $spacing-small;
