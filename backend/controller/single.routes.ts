@@ -13,6 +13,9 @@
  *                  items:
  *                      type: string
  *                      example: digitall.be/situation-belgium
+ *              score:
+ *                  type: number
+ *                  example: 0.5
  *              questionResults:
  *                  type: object
  *                  properties:

@@ -3,9 +3,6 @@ import questions from '../WCAG/questions';
 import pa11y from 'pa11y';
 import https from 'https';
 import { TLSSocket } from 'tls';
-import { JSDOM } from 'jsdom';
-import tm from 'text-miner';
-import { Readability } from '@mozilla/readability';
 import cheerioModule from 'cheerio';
 
 // Pa11y options
@@ -52,7 +49,7 @@ const runTestsForHostname = async (hostname: string, urls: string[]) => {
     return {
         hostname: hostname,
         urls,
-        score,
+        score: Math.round(score/3),
         questionResults: {
             wcagResult,
             httpsResult,
@@ -94,6 +91,7 @@ const runWcagTest = async (urls: string[]) => {
         wcagResult.answer = questions.wcag.answers.answer5.answer;
         wcagResult.explanation = questions.wcag.answers.answer5.explanation;
         wcagResult.url = questions.wcag.answers.answer5.url;
+        score += 5;
     }
     else {
         const lowestWcagIssue = allIssues.reduce((acc: any, issue: any) => {
@@ -109,16 +107,19 @@ const runWcagTest = async (urls: string[]) => {
                 wcagResult.answer = questions.wcag.answers.answer2.answer;
                 wcagResult.explanation = questions.wcag.answers.answer2.explanation;
                 wcagResult.url = questions.wcag.answers.answer2.url;
+                score += 2;
                 break;
             case "WCAG2AA":
                 wcagResult.answer = questions.wcag.answers.answer3.answer;
                 wcagResult.explanation = questions.wcag.answers.answer3.explanation;
                 wcagResult.url = questions.wcag.answers.answer3.url;
+                score += 3;
                 break;
             case "WCAG2AAA":
                 wcagResult.answer = questions.wcag.answers.answer4.answer;
                 wcagResult.explanation = questions.wcag.answers.answer4.explanation;
                 wcagResult.url = questions.wcag.answers.answer4.url;
+                score += 4;
                 break;
             default:
 
@@ -130,6 +131,7 @@ const runWcagTest = async (urls: string[]) => {
 };
 
 const runHttpsTest = (url: string): Promise<any> => {
+    let addedScore = false;
     // Return a new promise
     return new Promise((resolve, reject) => {
         // Create the httpsResult object
@@ -150,11 +152,15 @@ const runHttpsTest = (url: string): Promise<any> => {
                     httpsResult.answer = questions.https.answers.answer1.answer;
                     httpsResult.explanation = questions.https.answers.answer1.explanation;
                     httpsResult.url = questions.https.answers.answer1.url;
+                    score += 1;
+                    addedScore = true;
                 }
                 else {
                     httpsResult.answer = questions.https.answers.answer5.answer;
                     httpsResult.explanation = questions.https.answers.answer5.explanation;
                     httpsResult.url = questions.https.answers.answer5.url;
+                    score += 5;
+                    addedScore = true;
                 }
                 resolve(httpsResult); // Resolve the promise with httpsResult
                 return undefined;
@@ -170,11 +176,13 @@ const runHttpsTest = (url: string): Promise<any> => {
                         httpsResult.answer = questions.https.answers.answer5.answer;
                         httpsResult.explanation = questions.https.answers.answer5.explanation;
                         httpsResult.url = questions.https.answers.answer5.url;
+                        if (!addedScore) score += 5;
                     }
                     else {
                         httpsResult.answer = questions.https.answers.answer1.answer;
                         httpsResult.explanation = questions.https.answers.answer1.explanation;
                         httpsResult.url = questions.https.answers.answer1.url;
+                        if (!addedScore) score += 1;
                     }
 
                     resolve(httpsResult); // Resolve the promise with httpsResult
@@ -207,42 +215,44 @@ const runAccessibilityTest = async (urls: string[]) => {
     }
 
     try {
-        const corpus = new tm.Corpus([]);
-        // const documents: string[] = [];
+        let match: boolean = false;
+        const regexNL = new RegExp(".*toegankelijkheidsverklaring.*");
+        const regexFR1 = new RegExp(".*declaration-daccessibilite.*");
+        const regexEN1 = new RegExp(".*accessibility-statement.*");
+        const regexEN2 = new RegExp(".*accessibility-declaration.*");
         const promises = urls.map(async (url) => {
+            let matchUrl = false
             const response = await fetch(url);
             const html = await response.text();
-            // console.log(html)
-            // documents.push(html);
             const $ = cheerioModule.load(html);
-            const text = $('body').text();
-            // jsdom eruit gooien
-            // const dom = new JSDOM(html);
-            // console.log("document: ", dom.window.document);
-            // mozilla readability eruit gooien
-            // const reader = new Readability(dom.window.document);
-            // const article = reader.parse();
-            // console.log("article: ", article);
-            corpus.addDoc(text);
+            const anchors = $('a');
+            anchors.each((index, element) => {
+                const href = $(element).attr("href");
+                if (regexNL.test(href) || regexFR1.test(href) || regexEN1.test(href) || regexEN2.test(href)) {
+                    matchUrl = true;
+                }
+            });
+            if (matchUrl) {
+                match = true;
+            }
+            else {
+                match = false;
+            }
         });
-
         await Promise.all(promises);
 
-        // documents.forEach((document) => {
-        //     console.log(document);
-        //     const dom = new JSDOM(document);
-        //     const reader = new Readability(dom.window.document);
-        //     const article = reader.parse();
-        //     // console.log(article.textContent);
-        //     corpus.addDoc(article.textContent);
-        // });
-        
-        const terms = new tm.DocumentTermMatrix(corpus);
-        const regex = new RegExp(".*Toegankelijkheidsverklaring.*");
-        terms.vocabulary.forEach((term) => {
-            if (regex.test(term)) console.log("term: ", term);
-        });
-        // console.log("documents: ", terms.vocabulary)
+        if (match) {
+            accessibilityResult.answer = questions.accessibility.answers.answer5.answer;
+            accessibilityResult.explanation = questions.accessibility.answers.answer5.explanation;
+            accessibilityResult.url = questions.accessibility.answers.answer5.url;
+            score += 5;
+        }
+        else {
+            accessibilityResult.answer = questions.accessibility.answers.answer1.answer;
+            accessibilityResult.explanation = questions.accessibility.answers.answer1.explanation;
+            accessibilityResult.url = questions.accessibility.answers.answer1.url;
+            score += 1;
+        }
     } catch (error: any) {
         console.error(error);
     }

@@ -1,4 +1,5 @@
 import jsPDF from 'jspdf';
+import scoring from '../WCAG/scoring';
 
 const makeReport = (reportData: any[]): jsPDF => {
     // Initialize yPosition
@@ -15,6 +16,34 @@ const makeReport = (reportData: any[]): jsPDF => {
     while ( i < reportData.length ) {
         // Add hostname
         yPosition = addTitle(doc, reportData[i].hostname, yPosition, 18);
+
+        // Add score
+        console.log(reportData[i].score);
+        switch (reportData[i].score) {
+            case 1:
+                yPosition = addTitle(doc, scoring.not.title, yPosition, 16);
+                yPosition = addParagraph(doc, scoring.not.description, yPosition, 14);
+                break;
+            case 2:
+                yPosition = addTitle(doc, scoring.limited.title, yPosition, 16);
+                yPosition = addParagraph(doc, scoring.limited.description, yPosition, 14);
+                break;
+            case 3:
+                yPosition = addTitle(doc, scoring.emergent.title, yPosition, 16);
+                yPosition = addParagraph(doc, scoring.emergent.description, yPosition, 14);
+                break;
+            case 4:
+                yPosition = addTitle(doc, scoring.structured.title, yPosition, 16);
+                yPosition = addParagraph(doc, scoring.structured.description, yPosition, 14);
+                break;
+            case 5:
+                yPosition = addTitle(doc, scoring.leading.title, yPosition, 16);
+                yPosition = addParagraph(doc, scoring.leading.description, yPosition, 14);
+                break;
+            default:
+                break;
+        };
+        yPosition += 5;
 
         // Add accessibility title
         yPosition = addTitle(doc, "Accessibility", yPosition, 16);
