@@ -8,7 +8,9 @@ const Header: React.FC = () => {
                 Get your websites accessibility tested here!
             </div>
             <div className="language-selector">
-                EN
+                <a href="https://digitall.be/">
+                    <img className="logo" src="/digitall_logo.png" alt="logo digitall" />
+                </a>
             </div>
 		</div>
     );

@@ -19,6 +19,9 @@
 	};
 
 	.language-selector {
-		margin: $spacing-medium $spacing-huge $spacing-medium 0;
+		.logo {
+			height: 50px;
+			margin-right: $spacing-medium;
+		};
 	};
 };
