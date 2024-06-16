@@ -4,15 +4,7 @@ import pa11y from 'pa11y';
 import https from 'https';
 import { TLSSocket } from 'tls';
 import cheerioModule from 'cheerio';
-
-// Pa11y options
-const options = {
-    log: {
-        debug: console.log,
-        error: console.error,
-        info: console.log,
-    },
-};
+import puppeteer from 'puppeteer';
 
 let score = 0;
 
@@ -59,6 +51,23 @@ const runTestsForHostname = async (hostname: string, urls: string[]) => {
 };
 
 const runWcagTest = async (urls: string[]) => {
+    // Launch the puppeteer browser
+    const browser = await puppeteer.launch({
+        executablePath: '/usr/bin/chromium', // Adjust the path as needed
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    
+
+    // Pa11y options
+    const options = {
+        browser: browser,
+        log: {
+            debug: console.log,
+            error: console.error,
+            info: console.log,
+        },
+    };
+
     // Wcag result
     const wcagResult = { 
         question: questions.wcag.question,
@@ -126,6 +135,8 @@ const runWcagTest = async (urls: string[]) => {
                 break;
         };
     };
+
+    browser.close();
 
     return wcagResult;
 };
