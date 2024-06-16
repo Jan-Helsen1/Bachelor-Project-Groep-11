@@ -51,16 +51,18 @@ const runTestsForHostname = async (hostname: string, urls: string[]) => {
 };
 
 const runWcagTest = async (urls: string[]) => {
+    // uncomment for deployment
     // Launch the puppeteer browser
-    const browser = await puppeteer.launch({
-        executablePath: '/usr/bin/chromium', // Adjust the path as needed
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
+    // const browser = await puppeteer.launch({
+    //     executablePath: '/usr/bin/chromium', // Adjust the path as needed
+    //     args: ['--no-sandbox', '--disable-setuid-sandbox']
+    // });
     
 
     // Pa11y options
     const options = {
-        browser: browser,
+        // Uncomment for deployment
+        // browser: browser,
         log: {
             debug: console.log,
             error: console.error,
@@ -136,7 +138,9 @@ const runWcagTest = async (urls: string[]) => {
         };
     };
 
-    browser.close();
+    // uncomment for deployment
+    // Close the puppeteer browser
+    // browser.close();
 
     return wcagResult;
 };
