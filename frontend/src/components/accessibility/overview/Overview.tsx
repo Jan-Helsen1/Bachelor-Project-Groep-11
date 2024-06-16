@@ -41,7 +41,11 @@ const HomeOverview: React.FC<Props> = ({ setShowReport, setReportData }: Props) 
 						<h1 className="title">What is ValidAll? What is digital inclusion? Discover everything here!</h1>
 					</div>
 					<div className="grid-item div2">
-						<YellowBox title={'What is digital inclusion'} content={'The world in which we live is becoming more digital day by day. Many people risk to be excluded.'} />
+						<YellowBox
+							url="https://digitall.be/digital-inclusion"
+							title={'What is digital inclusion'}
+							content={'The world in which we live is becoming more digital day by day. Many people risk to be excluded.'}
+						/>
 					</div>
 					<div className="grid-item form-container div3">
 						<Form
@@ -51,19 +55,22 @@ const HomeOverview: React.FC<Props> = ({ setShowReport, setReportData }: Props) 
 						/>
 					</div>
 					<div className="grid-item div4">
-						<YellowBox 
+						<YellowBox
+							url="https://digitall.be/who-are-we"
 							title={'About DigitAll'} 
 							content={'DigitAll is a coalition of companies, social organisations and government bodies working together for more digital inclusion in Belgium. Discover who we are and get to know our initiatives to improve digital inclusion.'} 
 						/>
 					</div>
 					<div className="grid-item div5">
 						<YellowBox
+							url="https://digitall.be/charter"
 							title="Charter"
 							content="To enhacne digital inclusion, DigitAll created a charter with 9 engagements."
 						/>
 					</div>
 					<div className="grid-item div6">
-						<YellowBox 
+						<YellowBox
+							url="https://digitall.be/partners"
 							title="Partners DigitAll"
 							content="Digitall thrives by the commitment from companies, governments and social organisations."
 						/>

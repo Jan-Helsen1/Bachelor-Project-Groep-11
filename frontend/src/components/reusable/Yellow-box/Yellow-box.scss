@@ -1,26 +1,28 @@
 @import "../../../variables.scss";
 
-.yellow-container h1{
-    padding: 15px;
-    margin-left: 50px;
-    width: 30%;
-}
-
 .yellow-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     background-color: #ffd405; 
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    width: 50%;
+    gap: $spacing-medium;
     box-shadow: $shadow-small;
-}
+    text-decoration: none;
+    color: $primary-color-text;
 
-.yellow-box h2 {
-    font-size: 1.5em;
-    margin-bottom: 10px;
-}
+    &:hover h2 {
+        text-decoration: underline;
+    };
 
-.yellow-box p {
-    font-size: 1em;
-    margin-top: 10px; /* Add margin to separate from h2 */
-}
+    &:hover h3 {
+        text-decoration: underline;
+    };
+
+    h2, h3, p {
+        margin: 0;
+    };
+};
