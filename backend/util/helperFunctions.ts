@@ -142,66 +142,78 @@ const runHttpsTest = (url: string): Promise<any> => {
             url: questions.https.answers.answer1.url
         };
 
-        // Create the httpsOptions object
-        const httpsOptions = {
-            hostname: new URL(url).hostname,
-            port: 443,
-            method: "GET",
-            checkServerIdentity: function(host, cert) {
-                if (!cert) {
-                    httpsResult.answer = questions.https.answers.answer1.answer;
-                    httpsResult.explanation = questions.https.answers.answer1.explanation;
-                    httpsResult.url = questions.https.answers.answer1.url;
-                    score += 1;
-                    addedScore = true;
-                }
-                else {
-                    httpsResult.answer = questions.https.answers.answer5.answer;
-                    httpsResult.explanation = questions.https.answers.answer5.explanation;
-                    httpsResult.url = questions.https.answers.answer5.url;
-                    score += 5;
-                    addedScore = true;
-                }
-                resolve(httpsResult); // Resolve the promise with httpsResult
-                return undefined;
-            },
-        };
+        const fullUrl = new URL(url);
 
-        // Try to run the https request
-        try {
-            const request = https.request(url, httpsOptions, (res) => {
-                if (res.statusCode === 200) {
-                    // Handle the response if needed
-                    if (res.socket instanceof TLSSocket && res.socket.encrypted) {
-                        httpsResult.answer = questions.https.answers.answer5.answer;
-                        httpsResult.explanation = questions.https.answers.answer5.explanation;
-                        httpsResult.url = questions.https.answers.answer5.url;
-                        if (!addedScore) score += 5;
-                    }
-                    else {
+        if (fullUrl.protocol !== "https:") {
+            httpsResult.answer = questions.https.answers.answer1.answer;
+            httpsResult.explanation = questions.https.answers.answer1.explanation;
+            httpsResult.url = questions.https.answers.answer1.url;
+            score += 1;
+            addedScore = true;
+            resolve(httpsResult); // Resolve the promise with httpsResult
+        }
+        else {
+            // Create the httpsOptions object
+            const httpsOptions = {
+                hostname: fullUrl.hostname,
+                port: 443,
+                method: "GET",
+                checkServerIdentity: function(host, cert) {
+                    if (!cert) {
                         httpsResult.answer = questions.https.answers.answer1.answer;
                         httpsResult.explanation = questions.https.answers.answer1.explanation;
                         httpsResult.url = questions.https.answers.answer1.url;
-                        if (!addedScore) score += 1;
+                        score += 1;
+                        addedScore = true;
                     }
-
+                    else {
+                        httpsResult.answer = questions.https.answers.answer5.answer;
+                        httpsResult.explanation = questions.https.answers.answer5.explanation;
+                        httpsResult.url = questions.https.answers.answer5.url;
+                        score += 5;
+                        addedScore = true;
+                    }
                     resolve(httpsResult); // Resolve the promise with httpsResult
-                } else {
-                    // Handle other status codes if needed
-                    reject("HTTPS test unsuccessful"); // Reject the promise with an error
-                }
-            });
+                    return undefined;
+                },
+            };
 
-            request.on("error", (error) => {
-                console.error(error); // Log the error
-                reject(error); // Reject the promise with the error
-            });
+            // Try to run the https request
+            try {
+                const request = https.request(url, httpsOptions, (res) => {
+                    if (res.statusCode === 200) {
+                        // Handle the response if needed
+                        if (res.socket instanceof TLSSocket && res.socket.encrypted) {
+                            httpsResult.answer = questions.https.answers.answer5.answer;
+                            httpsResult.explanation = questions.https.answers.answer5.explanation;
+                            httpsResult.url = questions.https.answers.answer5.url;
+                            if (!addedScore) score += 5;
+                        }
+                        else {
+                            httpsResult.answer = questions.https.answers.answer1.answer;
+                            httpsResult.explanation = questions.https.answers.answer1.explanation;
+                            httpsResult.url = questions.https.answers.answer1.url;
+                            if (!addedScore) score += 1;
+                        }
 
-            request.end();
+                        resolve(httpsResult); // Resolve the promise with httpsResult
+                    } else {
+                        // Handle other status codes if needed
+                        reject("HTTPS test unsuccessful"); // Reject the promise with an error
+                    }
+                });
 
-        } catch (error) {
-            console.error(error); // Log the caught error
-            reject(error); // Reject the promise with the caught error
+                request.on("error", (error) => {
+                    console.error(error); // Log the error
+                    reject(error); // Reject the promise with the error
+                });
+
+                request.end();
+
+            } catch (error) {
+                console.error(error); // Log the caught error
+                reject(error); // Reject the promise with the caught error
+            }   
         }
     });
 };
@@ -215,7 +227,7 @@ const runAccessibilityTest = async (urls: string[]) => {
     }
 
     try {
-        let match: boolean = false;
+        let match: boolean[] = [];
         const regexNL = new RegExp(".*toegankelijkheidsverklaring.*");
         const regexFR1 = new RegExp(".*declaration-daccessibilite.*");
         const regexEN1 = new RegExp(".*accessibility-statement.*");
@@ -228,20 +240,22 @@ const runAccessibilityTest = async (urls: string[]) => {
             const anchors = $('a');
             anchors.each((index, element) => {
                 const href = $(element).attr("href");
+                console.log("href: ", href);
                 if (regexNL.test(href) || regexFR1.test(href) || regexEN1.test(href) || regexEN2.test(href)) {
                     matchUrl = true;
                 }
             });
+            // console.log("wtf: ", match, matchUrl, url);
             if (matchUrl) {
-                match = true;
+                match.push(true);
             }
             else {
-                match = false;
+                match.push(false);
             }
         });
         await Promise.all(promises);
 
-        if (match) {
+        if (match.every((m) => m === true)) {
             accessibilityResult.answer = questions.accessibility.answers.answer5.answer;
             accessibilityResult.explanation = questions.accessibility.answers.answer5.explanation;
             accessibilityResult.url = questions.accessibility.answers.answer5.url;
@@ -289,73 +303,127 @@ const sortUrlsByHostname = (urls: string[]) => {
 
 const formatIssues = (issues: any) => {
     return issues.map((issue: any) => {
-        // gets the principles object from the messages object
-        const principles = messages[issue.type];
-
+        // array of messages
+        const arrayPrinciples = messages[issue.type];
+        const principleValues = Object.keys(arrayPrinciples);
+        
         // gets the index of the first dot in the issue code
         const firstDotIndex = issue.code.indexOf('.');
 
         // removes the wcag number from the issue code
         const resultString = issue.code.substring(firstDotIndex + 1);
-        
-        // checks for principle if no found returns undefined
-        const result = principles[resultString];
 
-        // if principle found return the principle message
-        // else if try to remove last group of characters and check again
-        // else return standard message
-        if (result) {
+        const newArray = principleValues.filter((principle) => {
+            //creates a regex from the principle
+            const regex = new RegExp(principle);
+
+            if (regex.test(resultString)) {
+                return true;
+            }
+            else {
+                const resultString2 = resultString.substring(0, resultString.lastIndexOf('.'));
+
+                if (regex.test(resultString2)) {
+                    return true;
+                }
+                else {
+                    const resultString3 = resultString2.substring(0, resultString2.lastIndexOf('.'));
+
+                    if (regex.test(resultString3)) {
+                        return true;
+                    }
+                    else {
+                        return false;    
+                    }
+                };
+            };
+        })
+
+        if (newArray.length === 1) {
+            const principle = arrayPrinciples[newArray[0]];
             return {
                 context: issue.context,
                 message: issue.message,
-                explanation: result.explanation,
-                appliesTo: result.appliesTo,
+                explanation: principle.explanation,
+                appliesTo: principle.appliesTo,
                 type: issue.type,
                 wcag: issue.code.substring(0, firstDotIndex),
                 code: issue.code.substring(firstDotIndex + 1),
             };
         }
         else {
-            const resultString2 = resultString.substring(0, resultString.lastIndexOf('.'));
-            const result2 = principles[resultString2];
-            if (result2) {
-                return {
-                    context: issue.context,
-                    message: issue.message,
-                    explanation: result2.explanation,
-                    appliesTo: result2.appliesTo,
-                    type: issue.type,
-                    wcag: issue.code.substring(0, firstDotIndex),
-                    code: issue.code.substring(firstDotIndex + 1),
-                };
-            }
-            else {
-                const resultString3 = resultString2.substring(0, resultString2.lastIndexOf('.'));
-                const result3 = principles[resultString3];
-                if (result3) {
-                    return {
-                        context: issue.context,
-                        message: issue.message,
-                        explanation: result3.explanation,
-                        appliesTo: result3.appliesTo,
-                        type: issue.type,
-                        wcag: issue.code.substring(0, firstDotIndex),
-                        code: issue.code.substring(firstDotIndex + 1),
-                    };
-                }
-                else {
-                    return {
-                        context: issue.context,
-                        message: issue.message,
-                        explanation: "No explanation found",
-                        appliesTo: "No applies to found",
-                        type: issue.type,
-                        wcag: issue.code.substring(0, firstDotIndex),
-                        code: issue.code.substring(firstDotIndex + 1),
-                    };
-                };
+            return {
+                context: issue.context,
+                message: issue.message,
+                explanation: "No explanation found",
+                appliesTo: "No applies to found",
+                type: issue.type,
+                wcag: issue.code.substring(0, firstDotIndex),
+                code: issue.code.substring(firstDotIndex + 1),
             };
         };
+
+        // // gets the principles object from the messages object
+        // const principles = messages[issue.type];
+        
+        // // checks for principle if no found returns undefined
+        // const result = principles[resultString];
+
+        // if principle found return the principle message
+        // else if try to remove last group of characters and check again
+        // else return standard message
+        // if (result) {
+        //     return {
+        //         context: issue.context,
+        //         message: issue.message,
+        //         explanation: result.explanation,
+        //         appliesTo: result.appliesTo,
+        //         type: issue.type,
+        //         wcag: issue.code.substring(0, firstDotIndex),
+        //         code: issue.code.substring(firstDotIndex + 1),
+        //     };
+        // }
+        // else {
+        //     const resultString2 = resultString.substring(0, resultString.lastIndexOf('.'));
+        //     const result2 = principles[resultString2];
+        //     if (result2) {
+        //         return {
+        //             context: issue.context,
+        //             message: issue.message,
+        //             explanation: result2.explanation,
+        //             appliesTo: result2.appliesTo,
+        //             type: issue.type,
+        //             wcag: issue.code.substring(0, firstDotIndex),
+        //             code: issue.code.substring(firstDotIndex + 1),
+        //         };
+        //     }
+        //     else {
+        //         const resultString3 = resultString2.substring(0, resultString2.lastIndexOf('.'));
+        //         const result3 = principles[resultString3];
+        //         if (result3) {
+        //             return {
+        //                 context: issue.context,
+        //                 message: issue.message,
+        //                 explanation: result3.explanation,
+        //                 appliesTo: result3.appliesTo,
+        //                 type: issue.type,
+        //                 wcag: issue.code.substring(0, firstDotIndex),
+        //                 code: issue.code.substring(firstDotIndex + 1),
+        //             };
+        //         }
+        //         else {
+        //             return {
+        //                 context: issue.context,
+        //                 message: issue.message,
+        //                 explanation: "No explanation found",
+        //                 appliesTo: "No applies to found",
+        //                 type: issue.type,
+        //                 wcag: issue.code.substring(0, firstDotIndex),
+        //                 code: issue.code.substring(firstDotIndex + 1),
+        //             };
+        //         };
+        //     };
+        // };
     });
 };
 

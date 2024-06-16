@@ -22,7 +22,6 @@ const HomeOverview: React.FC<Props> = ({ setShowReport, setReportData }: Props) 
 					body: JSON.stringify({ urls: multipleUrls }),
 				});
 				const data = await response.json();
-				console.log(data.results);
 				setReportData(data.results);
 				setShowReport(true);
 			}

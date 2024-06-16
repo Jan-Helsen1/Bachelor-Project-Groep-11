@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./Form.scss";
 import Spinner from "../../../components/reusable/Spinner/Spinner.tsx";
 
@@ -12,13 +12,6 @@ type Props = {
 const Form: React.FC<Props> = ({ multipleUrls, setMultipleUrls, handleCheckAccessibility }: Props) => {
     const [url, setUrl] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    useEffect(() => {
-        if (multipleUrls.length > 0) {
-            console.log("urls: ", multipleUrls);
-        }
-    }, [multipleUrls])
-
 
     const onCheckAccessibility = async () => {
         setIsLoading(true);

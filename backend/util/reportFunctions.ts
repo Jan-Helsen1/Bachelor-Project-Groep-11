@@ -18,7 +18,6 @@ const makeReport = (reportData: any[]): jsPDF => {
         yPosition = addTitle(doc, reportData[i].hostname, yPosition, 18);
 
         // Add score
-        console.log(reportData[i].score);
         switch (reportData[i].score) {
             case 1:
                 yPosition = addTitle(doc, scoring.not.title, yPosition, 16);
