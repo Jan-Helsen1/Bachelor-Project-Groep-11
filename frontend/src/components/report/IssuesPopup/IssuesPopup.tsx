@@ -14,16 +14,18 @@ const IssuesPopup: React.FC<Props> = ({ isOpen, hostIssues, setIsOpen }: Props) 
         <Modal isOpen={isOpen}>
             <div className="issues-popup">
                 <div className="header-popup">
-                    <h2 className="title">Issues</h2>
+                    <h2 className="title">WCAG Issues</h2>
                     <button onClick={() => setIsOpen(false)} className="close-button">Close</button>
                 </div>
                 <div className="issues-container">
-                    {hostIssues.map((hostIssue: any, index: number) => (
-                        <div key={index}>
-                            <h3 className="page-title">{hostIssue.documentTitle}</h3>
-                            {hostIssue.issues.map((issue: any, index: number) => (
+                    { hostIssues.map((hostIssue: any, index: number) => (
+                        <div className="issue-container" key={index}>
+                            <h3 className="document-title">{hostIssue.documentTitle}</h3>
+                            { hostIssue.issues.length > 0 ? (hostIssue.issues.map((issue: any, index: number) => (
                                 <Issue key={index} issue={issue} />
-                            ))}
+                            ))) : (
+                                <p>No issues found</p>
+                            )}
                         </div>
                     ))}
                 </div>

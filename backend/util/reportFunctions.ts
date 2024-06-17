@@ -96,6 +96,9 @@ const addIssueToReport = (doc: jsPDF, issue: any, yPosition: number): number => 
     const issues = issue.issues;
     
     // Loop over the issues
+    if (issues.length === 0) {
+        return addParagraph(doc, 'No issues found', yPosition, 12) + 5;
+    };
     issues.forEach((issue: any) => {
         // Check page break
         yPosition = checkPageBreak(doc, yPosition, 230);

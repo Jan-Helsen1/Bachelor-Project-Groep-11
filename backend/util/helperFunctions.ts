@@ -255,12 +255,10 @@ const runAccessibilityTest = async (urls: string[]) => {
             const anchors = $('a');
             anchors.each((index, element) => {
                 const href = $(element).attr("href");
-                console.log("href: ", href);
                 if (regexNL.test(href) || regexFR1.test(href) || regexEN1.test(href) || regexEN2.test(href)) {
                     matchUrl = true;
                 }
             });
-            // console.log("wtf: ", match, matchUrl, url);
             if (matchUrl) {
                 match.push(true);
             }
@@ -354,7 +352,7 @@ const formatIssues = (issues: any) => {
             };
         })
 
-        if (newArray.length === 1) {
+        if (newArray.length > 0) {
             const principle = arrayPrinciples[newArray[0]];
             return {
                 context: issue.context,
@@ -377,68 +375,6 @@ const formatIssues = (issues: any) => {
                 code: issue.code.substring(firstDotIndex + 1),
             };
         };
-
-        // // gets the principles object from the messages object
-        // const principles = messages[issue.type];
-        
-        // // checks for principle if no found returns undefined
-        // const result = principles[resultString];
-
-        // if principle found return the principle message
-        // else if try to remove last group of characters and check again
-        // else return standard message
-        // if (result) {
-        //     return {
-        //         context: issue.context,
-        //         message: issue.message,
-        //         explanation: result.explanation,
-        //         appliesTo: result.appliesTo,
-        //         type: issue.type,
-        //         wcag: issue.code.substring(0, firstDotIndex),
-        //         code: issue.code.substring(firstDotIndex + 1),
-        //     };
-        // }
-        // else {
-        //     const resultString2 = resultString.substring(0, resultString.lastIndexOf('.'));
-        //     const result2 = principles[resultString2];
-        //     if (result2) {
-        //         return {
-        //             context: issue.context,
-        //             message: issue.message,
-        //             explanation: result2.explanation,
-        //             appliesTo: result2.appliesTo,
-        //             type: issue.type,
-        //             wcag: issue.code.substring(0, firstDotIndex),
-        //             code: issue.code.substring(firstDotIndex + 1),
-        //         };
-        //     }
-        //     else {
-        //         const resultString3 = resultString2.substring(0, resultString2.lastIndexOf('.'));
-        //         const result3 = principles[resultString3];
-        //         if (result3) {
-        //             return {
-        //                 context: issue.context,
-        //                 message: issue.message,
-        //                 explanation: result3.explanation,
-        //                 appliesTo: result3.appliesTo,
-        //                 type: issue.type,
-        //                 wcag: issue.code.substring(0, firstDotIndex),
-        //                 code: issue.code.substring(firstDotIndex + 1),
-        //             };
-        //         }
-        //         else {
-        //             return {
-        //                 context: issue.context,
-        //                 message: issue.message,
-        //                 explanation: "No explanation found",
-        //                 appliesTo: "No applies to found",
-        //                 type: issue.type,
-        //                 wcag: issue.code.substring(0, firstDotIndex),
-        //                 code: issue.code.substring(firstDotIndex + 1),
-        //             };
-        //         };
-        //     };
-        // };
     });
 };
 

@@ -2,14 +2,15 @@
 
 .issues-popup {
     max-height: 70vh;
+    width: 70vw;
     max-width: 70vw;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: $spacing-medium;
     padding: $spacing-large;
-    background-color: $secondary-color-blue-active;
-    border: $border-light;
+    background-color: $secondary-color-text;
+    border: $border-dark;
     border-radius: $border-radius-medium;
 
     .header-popup {
@@ -19,5 +20,36 @@
         .title {
             margin: 0;
         };
+
+        .close-button {
+            background-color: $primary-color-blue;
+            color: $secondary-color-text;
+            border: none;
+            padding: $spacing-small;
+            border-radius: $border-radius-small;
+            font-size: $font-size-medium;
+
+            &:hover {
+                background-color: $primary-color-blue-hover;
+                color: $primary-color-text;
+            };
+
+            &:active {
+                background-color: $primary-color-blue-active;
+                color: $primary-color-text;
+            };
+        };
+    };
+
+    .issues-container {
+        display: flex;
+        flex-direction: column;
+        gap: $spacing-small;
+
+        .issue-container {
+            display: flex;
+            flex-direction: column;
+            gap: $spacing-extra-small;
+        }
     }
-}
+};

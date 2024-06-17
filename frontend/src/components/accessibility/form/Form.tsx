@@ -30,6 +30,7 @@ const Form: React.FC<Props> = ({ multipleUrls, setMultipleUrls, handleCheckAcces
             return;
         }
         setMultipleUrls([...multipleUrls, url])
+        setUrl("");
     };
 
     const handleDeleteUrl = (index: number) => {
