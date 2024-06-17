@@ -268,11 +268,11 @@ const messages = {
             explanation: "Link with a href attribute, but without link text.",
             appliesTo: "Link with a href attribute, but without link text."
         },
-        "Principle4.Guideline4_1.4_1_2.H91.[NodeName].Name": {
+        "Principle4.Guideline4_1.4_1_2.H91..*.Name": {
             explanation: "This [element type] does not have a name available to an accessibility API.",
             appliesTo: "Form control which does not have a valid accessibility API 'name'."
         },
-        "Principle4.Guideline4_1.4_1_2.H91.[NodeName].Value": {
+        "Principle4.Guideline4_1.4_1_2.H91..*.Value": {
             explanation: "This [element type] does not have a value available to an accessibility API.",
             appliesTo: "Form control which does not have a valid accessibility API 'value'."
         },
@@ -491,6 +491,10 @@ const messages = {
         "Principle1.Guideline1_3.1_3_1.H39.3.Check": {
             explanation: "If this table is a data table, check that the caption element accurately describes this table.",
             appliesTo: "Table with specified caption element."
+        },
+        "Principle1.Guideline1_3.1_3_1": {
+            explanation: "The element has the attribute presentation, which indicates that it is for presentation only and does not have semantic meaning. This is not recommended.",
+            appliesTo: "Element with the presentation attribute."
         },
         "Principle1.Guideline1_3.1_3_2.G57": {
             explanation: "When the sequence in which content is presented affects its meaning, a correct reading sequence can be programmatically determined.",

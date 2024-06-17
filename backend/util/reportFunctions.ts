@@ -18,7 +18,6 @@ const makeReport = (reportData: any[]): jsPDF => {
         yPosition = addTitle(doc, reportData[i].hostname, yPosition, 18);
 
         // Add score
-        console.log(reportData[i].score);
         switch (reportData[i].score) {
             case 1:
                 yPosition = addTitle(doc, scoring.not.title, yPosition, 16);
@@ -97,6 +96,9 @@ const addIssueToReport = (doc: jsPDF, issue: any, yPosition: number): number => 
     const issues = issue.issues;
     
     // Loop over the issues
+    if (issues.length === 0) {
+        return addParagraph(doc, 'No issues found', yPosition, 12) + 5;
+    };
     issues.forEach((issue: any) => {
         // Check page break
         yPosition = checkPageBreak(doc, yPosition, 230);
