@@ -17,7 +17,6 @@ const runTests = async (urls: string[]) => {
     score = 0;
 
     // Run tests for each hostname
-    // Run tests for each hostname
     const results = await Promise.all(
         sortedUrls.map(async (sortedUrl) => {
             return await runTestsForHostname(sortedUrl.hostname, sortedUrl.urls);
