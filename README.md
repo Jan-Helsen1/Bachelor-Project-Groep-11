@@ -1,6 +1,11 @@
 # ValidAll
 
 Uitleg project en wat het nut ervan is
+ValidAll is a website accessibility checker. The application runs a few accessibility test on the given URL's.
+The first test is on the WCAG guidelines. The second test is to see if there is a accessibility statement on every URL of the same domain.
+The third test is to see if the website has a ssl certificate.
+
+The application is very useful for people that want to improve the accessibility of their website.
 
 ## Deployement
 
